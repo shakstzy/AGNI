@@ -1,27 +1,42 @@
 #!/usr/bin/env python3
-"""AGNI — a root-level agent harness wiring the GitHub CLI and the browser-use CLI.
+"""AGNI — routed multi-system agent harness.
 
-An LLM drives a tool loop with exactly two capabilities:
+One LLM tool loop, six routed subsystems (HADES-style dispatch hierarchy:
+deterministic CLIs > headless browser > device UI):
 
-    github(argv)   -> runs `gh <argv...>`            (repos, PRs, issues, gh api, ...)
-    browser(argv)  -> runs `browser-use <argv...>`   (agentic browsing via the browser-use CLI)
+    bitwarden  -> `bw`                 vault status/unlock + credential retrieval
+    github     -> `gh`                 repos, PRs, issues, gh api
+    gog        -> `gog`                Google Workspace (Gmail/Calendar/Drive)
+    browser    -> `browser-use`        rendered web automation (sitemaps/profiles)
+    android    -> `adb`                Android device/emulator control
+    ios        -> `xcrun simctl`       iOS simulator control
+    auth       -> login pipeline       bw unlock -> cred fetch -> browser fill
+                                       (secrets stay in-process, never logged)
 
 Usage:
-    agni "open a PR updating the readme and screenshot github.com first"
-    agni --doctor          # check that gh and browser-use are installed/authed
-    agni --dry-run "..."   # print tool calls without executing them
+    agni "check my github notifications, then reply to the unread calendar invite"
+    agni auth <site> [--url <login_url>]   # deterministic login pipeline
+    agni --doctor                          # subsystem binary + auth report
+    agni --routes                          # print the routing table
+    agni --dry-run "..."                   # print tool calls, don't execute
 
 Env:
-    AGNI_MODEL      model name            (default: gpt-4o)
-    AGNI_BASE_URL   OpenAI-compatible API base (default: https://api.openai.com/v1)
-    OPENAI_API_KEY  API key (or AGNI_API_KEY)
-    AGNI_MAX_TURNS  max tool turns        (default: 25)
+    AGNI_MODEL       model name                  (default: gpt-4o)
+    AGNI_BASE_URL    OpenAI-compatible API base  (default: https://api.openai.com/v1)
+    OPENAI_API_KEY   API key (or AGNI_API_KEY)
+    AGNI_MAX_TURNS   max tool turns              (default: 30)
+    BW_SESSION       existing Bitwarden session token (skips unlock)
+    AGNI_BW_PASSWORD Bitwarden master password env for non-interactive unlock
+    BU_CDP_URL       attach browser-use to an existing Chrome CDP endpoint
+    BU_NAME          browser-use daemon session name (tab-per-job isolation)
 """
 
 from __future__ import annotations
 
 import json
 import os
+import re
+import shlex
 import shutil
 import subprocess
 import sys
@@ -31,89 +46,276 @@ import urllib.request
 MODEL = os.environ.get("AGNI_MODEL", "gpt-4o")
 BASE_URL = os.environ.get("AGNI_BASE_URL", "https://api.openai.com/v1").rstrip("/")
 API_KEY = os.environ.get("AGNI_API_KEY") or os.environ.get("OPENAI_API_KEY", "")
-MAX_TURNS = int(os.environ.get("AGNI_MAX_TURNS", "25"))
+MAX_TURNS = int(os.environ.get("AGNI_MAX_TURNS", "30"))
 DRY_RUN = "--dry-run" in sys.argv
 
-SYSTEM_PROMPT = """\
-You are AGNI, a terminal agent. You accomplish the user's task using exactly
-two tools:
+# ---------------------------------------------------------------- routing ---
 
-- `github`: shell args passed verbatim to the GitHub CLI (`gh`). Use it for
-  anything on GitHub: `gh repo view`, `gh pr create`, `gh issue list`,
-  `gh api`, `gh search`, etc. `gh` is already authenticated.
-- `browser`: shell args passed verbatim to the browser-use CLI
-  (`browser-use`). Use it for anything that needs a real browser: reading
-  pages, filling forms, screenshots, interacting with web UIs.
+# argv_prefix: fixed leading argv before the agent's args (e.g. simctl under xcrun).
+# guards: (pattern, reason) — matching argv is refused, agent told to escalate.
+SYSTEMS: dict[str, dict] = {
+    "bitwarden": {
+        "bin": ["bw"],
+        "desc": "Bitwarden vault: status, unlock, search. For login credentials prefer the `auth` tool (in-process retrieval; raw passwords must not enter the transcript).",
+        "guards": [
+            (r"^delete\b", "deleting vault items requires human approval"),
+        ],
+    },
+    "github": {
+        "bin": ["gh"],
+        "desc": "GitHub: repos, PRs, issues, actions, `gh api`. Already authenticated.",
+        "guards": [
+            (r"^repo (delete|archive)\b", "repo deletion/archival requires human approval"),
+            (r"^pr merge\b", "merging PRs requires human approval"),
+            (r"^workflow run\b", "triggering workflows requires human approval"),
+            (r"^secret ", "secret mutation requires human approval"),
+        ],
+    },
+    "gog": {
+        "bin": ["gog"],
+        "desc": "Google Workspace: gmail/calendar/drive/docs/sheets/tasks. Always pass --account=<email>.",
+        "guards": [
+            (r"(gmail )?send\b", "sending email requires human approval"),
+            (r"^drive (delete|trash)\b", "deleting Drive files requires human approval"),
+            (r"events (delete|remove)\b", "removing calendar events requires human approval"),
+        ],
+    },
+    "browser": {
+        "bin": ["browser-use"],
+        "desc": (
+            "Rendered web automation via the browser-use CLI. Honors BU_CDP_URL "
+            "(attach to an existing Chrome) and BU_NAME (daemon session name). "
+            "Pass use_login_env=true to inject AGNI_LOGIN_* credentials set by the auth tool."
+        ),
+        "guards": [
+            (r"(purchase|checkout|pay|order|transfer)", "financial transactions require human approval"),
+        ],
+        "allow_env": True,
+    },
+    "android": {
+        "bin": ["adb"],
+        "desc": "Android device/emulator control: devices, shell input tap/swipe/text, uiautomator dump, screencap, install.",
+        "guards": [
+            (r"^shell input (keyevent|text).*(pin|passcode)", "lock-screen credentials require human approval"),
+        ],
+    },
+    "ios": {
+        "bin": ["xcrun", "simctl"],
+        "desc": "iOS simulator control: list, boot, install, launch, io screenshot, ui (tap), openurl.",
+        "guards": [
+            (r"^erase\b", "erasing a simulator requires human approval"),
+        ],
+    },
+}
 
-Rules:
-- Prefer `github` for GitHub data; use `browser` when a page must actually be
-  rendered or clicked through.
-- Never invent URLs, issue numbers, or branch names — fetch them.
-- When the task is complete, reply with a concise summary of what you did.
-- If a tool fails twice, explain the blocker instead of retrying forever.
-"""
+# Output redaction: never let secrets reach the model transcript.
+SECRET_PATTERNS = [
+    re.compile(r"(BW_SESSION|GITHUB_TOKEN|GH_TOKEN|OPENAI_API_KEY|AGNI_API_KEY|"
+               r"AGNI_BW_PASSWORD|AGNI_LOGIN_(USER|PASS|TOTP))\s*[:=]\s*\S+", re.I),
+    re.compile(r"[A-Za-z0-9_\-]{24,}\.[A-Za-z0-9_\-]{6,}\.[A-Za-z0-9_\-]{20,}"),  # JWTs
+    re.compile(r"eyJ[A-Za-z0-9_\-]{10,}"),                                        # b64 JSON blobs
+]
+
+
+def scrub(text: str) -> str:
+    for pat in SECRET_PATTERNS:
+        text = pat.sub("[REDACTED]", text)
+    return text
+
+
+def guarded(system: str, argv: list[str]) -> str | None:
+    joined = " ".join(argv)
+    for pattern, reason in SYSTEMS[system]["guards"]:
+        if re.search(pattern, joined, re.I):
+            return f"REFUSED: {reason}. Escalate to the human; do not retry."
+    return None
+
+
+def run(system: str, argv: list[str], extra_env: dict | None = None) -> str:
+    spec = SYSTEMS[system]
+    refusal = guarded(system, argv)
+    if refusal:
+        return refusal
+    cmd = [*spec["bin"], *argv]
+    if DRY_RUN:
+        return f"[dry-run] would execute: {' '.join(shlex.quote(c) for c in cmd)}"
+    if not shutil.which(spec["bin"][0]):
+        return f"error: `{spec['bin'][0]}` not installed or not on PATH"
+    env = dict(os.environ)
+    if extra_env:
+        env.update(extra_env)
+    try:
+        proc = subprocess.run(cmd, capture_output=True, text=True, timeout=300, env=env)
+    except subprocess.TimeoutExpired:
+        return "error: command timed out after 300s"
+    out = (proc.stdout + proc.stderr).strip()
+    return scrub(out)[:20000] if out else f"(exit {proc.returncode}, no output)"
+
+
+# ------------------------------------------------------------------- auth ---
+
+def bw_session() -> str:
+    """Return a BW_SESSION token, unlocking non-interactively when possible."""
+    if os.environ.get("BW_SESSION"):
+        return os.environ["BW_SESSION"]
+    status = subprocess.run(["bw", "status"], capture_output=True, text=True)
+    try:
+        locked = json.loads(status.stdout).get("status") == "locked"
+    except json.JSONDecodeError:
+        locked = True
+    if not locked:
+        proc = subprocess.run(["bw", "unlock", "--raw", "--nointeraction"],
+                              capture_output=True, text=True)
+    elif os.environ.get("AGNI_BW_PASSWORD"):
+        proc = subprocess.run(
+            ["bw", "unlock", "--raw", "--passwordenv", "AGNI_BW_PASSWORD"],
+            capture_output=True, text=True)
+    else:
+        raise RuntimeError(
+            "vault locked and no AGNI_BW_PASSWORD set — human must run `bw unlock`")
+    token = proc.stdout.strip()
+    if proc.returncode != 0 or not token:
+        raise RuntimeError(f"bw unlock failed: {proc.stderr.strip() or 'unknown'}")
+    return token
+
+
+def bw_credentials(query: str) -> dict:
+    """Fetch item credentials in-process. Secrets never hit stdout or the transcript."""
+    env = {**os.environ, "BW_SESSION": bw_session()}
+    proc = subprocess.run(["bw", "get", "item", query],
+                          capture_output=True, text=True, env=env)
+    if proc.returncode != 0:
+        raise RuntimeError(f"bw get item '{query}' failed: {proc.stderr.strip()}")
+    item = json.loads(proc.stdout)
+    login = item.get("login") or {}
+    totp = ""
+    try:
+        totp = subprocess.run(["bw", "get", "totp", query],
+                              capture_output=True, text=True, env=env).stdout.strip()
+    except Exception:
+        pass
+    return {"name": item.get("name", query),
+            "username": login.get("username", ""),
+            "password": login.get("password", ""),
+            "totp": totp if totp and totp.isdigit() else ""}
+
+
+def auth_tool(action: str, site: str = "", url: str = "") -> str:
+    """Deterministic login pipeline: vault -> creds -> browser-use fill."""
+    if action == "status":
+        return run("bitwarden", ["status"])
+    if action == "unlock":
+        try:
+            bw_session()
+            return "vault unlocked; session established"
+        except RuntimeError as e:
+            return f"error: {e}"
+    if action in ("load", "login"):
+        if not site:
+            return "error: auth load/login requires site=<bitwarden item name>"
+        try:
+            creds = bw_credentials(site)
+        except RuntimeError as e:
+            return f"error: {e}"
+        _LOGIN_ENV.update({
+            "AGNI_LOGIN_USER": creds["username"],
+            "AGNI_LOGIN_PASS": creds["password"],
+            "AGNI_LOGIN_TOTP": creds["totp"],
+        })
+        summary = (f"credentials for '{creds['name']}' loaded into session env "
+                   f"(user={'*' * len(creds['username'])}, totp={'yes' if creds['totp'] else 'no'}). "
+                   "Use browser tool with use_login_env=true; the CLI can read "
+                   "AGNI_LOGIN_USER/AGNI_LOGIN_PASS/AGNI_LOGIN_TOTP.")
+        if action == "login":
+            target = url or f"https://{site}"
+            out = run("browser", ["open", target], extra_env=_LOGIN_ENV)
+            return summary + f"\n\nbrowser open {target}:\n{out}"
+        return summary
+    return f"error: unknown auth action '{action}'"
+
+
+_LOGIN_ENV: dict[str, str] = {}
+
+# ------------------------------------------------------------------ tools ---
 
 TOOLS = [
     {
         "type": "function",
         "function": {
-            "name": "github",
-            "description": "Run the GitHub CLI. `argv` is the full argument list after `gh`, e.g. [\"pr\", \"list\", \"--repo\", \"owner/name\"].",
+            "name": name,
+            "description": (
+                f"{spec['desc']} `argv` is the argument list after "
+                f"`{' '.join(spec['bin'])}`."
+            ),
             "parameters": {
                 "type": "object",
                 "properties": {
                     "argv": {"type": "array", "items": {"type": "string"}},
+                    **({
+                        "use_login_env": {
+                            "type": "boolean",
+                            "description": "Inject AGNI_LOGIN_* credentials loaded via the auth tool.",
+                        }
+                    } if spec.get("allow_env") else {}),
                 },
                 "required": ["argv"],
             },
         },
-    },
+    }
+    for name, spec in SYSTEMS.items()
+] + [
     {
         "type": "function",
         "function": {
-            "name": "browser",
-            "description": "Run the browser-use CLI. `argv` is the full argument list after `browser-use`, e.g. [\"open\", \"https://x.com\"] or [\"state\"].",
+            "name": "auth",
+            "description": (
+                "Login pipeline. action=status|unlock|load|login. 'load' pulls a "
+                "Bitwarden item's credentials into the session env; 'login' also "
+                "opens the site in the browser. Secrets never appear in output."
+            ),
             "parameters": {
                 "type": "object",
                 "properties": {
-                    "argv": {"type": "array", "items": {"type": "string"}},
+                    "action": {"type": "string", "enum": ["status", "unlock", "load", "login"]},
+                    "site": {"type": "string", "description": "Bitwarden item name"},
+                    "url": {"type": "string", "description": "login URL (default https://<site>)"},
                 },
-                "required": ["argv"],
+                "required": ["action"],
             },
         },
     },
 ]
 
-COMMAND_MAP = {"github": "gh", "browser": "browser-use"}
+SYSTEM_PROMPT = """\
+You are AGNI, a routed terminal agent. Each tool maps to one subsystem CLI.
+Dispatch hierarchy: deterministic CLIs (github/gog/bitwarden) first, then
+`browser` for rendered pages, then `android`/`ios` only when a device must be
+driven.
 
+Routing:
+- github -> `gh` (repos, PRs, issues, `gh api`). Already authenticated.
+- gog -> Google Workspace. ALWAYS pass --account=<email>; check `gog auth list`.
+- bitwarden -> `bw`. Vault access, credential lookup.
+- auth -> login pipeline. Use auth(load) then browser(use_login_env=true) to log
+  into sites; auth(login) does both. Never ask the user for passwords directly.
+- browser -> `browser-use` CLI for anything needing a real browser.
+- android -> `adb` (selector taps via uiautomator, text, swipe, screencap).
+- ios -> `xcrun simctl` (simulator list/boot/launch/screenshot).
 
-def run_tool(name: str, argv: list[str]) -> str:
-    binary = COMMAND_MAP[name]
-    cmd = [binary, *argv]
-    if DRY_RUN:
-        return f"[dry-run] would execute: {' '.join(cmd)}"
-    if not shutil.which(binary):
-        return f"error: `{binary}` is not installed or not on PATH"
-    try:
-        proc = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
-    except subprocess.TimeoutExpired:
-        return "error: command timed out after 300s"
-    out = (proc.stdout + proc.stderr).strip()
-    return out[:20000] if out else f"(exit {proc.returncode}, no output)"
+Rules:
+- Never invent URLs, IDs, or branch names — fetch them.
+- Credentials come from the auth tool, never from the user or guesses.
+- REFUSED responses mean a human boundary was hit — escalate, don't retry.
+- If a tool fails twice, explain the blocker instead of looping.
+- Finish with a concise report of what was done plus verification evidence.
+"""
 
 
 def chat(messages: list[dict]) -> dict:
-    body = json.dumps(
-        {"model": MODEL, "messages": messages, "tools": TOOLS}
-    ).encode()
+    body = json.dumps({"model": MODEL, "messages": messages, "tools": TOOLS}).encode()
     req = urllib.request.Request(
-        f"{BASE_URL}/chat/completions",
-        data=body,
-        headers={
-            "Authorization": f"Bearer {API_KEY}",
-            "Content-Type": "application/json",
-        },
-    )
+        f"{BASE_URL}/chat/completions", data=body,
+        headers={"Authorization": f"Bearer {API_KEY}", "Content-Type": "application/json"})
     try:
         with urllib.request.urlopen(req, timeout=120) as resp:
             return json.loads(resp.read())["choices"][0]["message"]
@@ -121,28 +323,71 @@ def chat(messages: list[dict]) -> dict:
         sys.exit(f"API error {e.code}: {e.read().decode()[:500]}")
 
 
+def dispatch(call: dict) -> str:
+    name = call["function"]["name"]
+    args = json.loads(call["function"]["arguments"] or "{}")
+    if name == "auth":
+        label = f"auth {args.get('action')} {args.get('site', '')}".strip()
+        print(f"$ {label}", flush=True)
+        return auth_tool(args.get("action", ""), args.get("site", ""), args.get("url", ""))
+    if name in SYSTEMS:
+        argv = [str(a) for a in args.get("argv", [])]
+        env = _LOGIN_ENV if args.get("use_login_env") else None
+        print(f"$ {' '.join(SYSTEMS[name]['bin'])} {' '.join(argv)}", flush=True)
+        return run(name, argv, extra_env=env)
+    return f"error: unknown tool {name}"
+
+
+# ------------------------------------------------------------------- cli ----
+
 def doctor() -> int:
     ok = True
-    for binary in COMMAND_MAP.values():
-        path = shutil.which(binary)
-        print(f"{'ok ' if path else 'MISSING'} {binary}: {path or 'not on PATH'}")
+    for name, spec in SYSTEMS.items():
+        path = shutil.which(spec["bin"][0])
+        print(f"{'ok ' if path else 'MISSING'} {name:9} -> {' '.join(spec['bin'])}: {path or 'not on PATH'}")
         ok &= bool(path)
+    if shutil.which("bw"):
+        print("bw status:", run("bitwarden", ["status"]))
     if shutil.which("gh"):
         auth = subprocess.run(["gh", "auth", "status"], capture_output=True, text=True)
-        print(auth.stdout.strip() or auth.stderr.strip())
+        print((auth.stdout or auth.stderr).strip())
     if not API_KEY:
         print("MISSING API key: set OPENAI_API_KEY or AGNI_API_KEY")
         ok = False
     return 0 if ok else 1
 
 
+def routes() -> int:
+    for name, spec in SYSTEMS.items():
+        guards = f" | guards: {len(spec['guards'])}" if spec["guards"] else ""
+        print(f"{name:10} {' '.join(spec['bin']):14} {spec['desc']}{guards}")
+    print(f"{'auth':10} {'(pipeline)':14} bw unlock -> creds -> browser fill")
+    return 0
+
+
+def cmd_auth(argv: list[str]) -> int:
+    if not argv:
+        print("usage: agni auth <bitwarden-item> [--url <login_url>]")
+        return 2
+    site = argv[0]
+    url = argv[argv.index("--url") + 1] if "--url" in argv else ""
+    if not shutil.which("bw"):
+        sys.exit("error: `bw` not installed")
+    print(auth_tool("login", site, url))
+    return 0
+
+
 def main() -> int:
     argv = [a for a in sys.argv[1:] if a != "--dry-run"]
-    if "--doctor" in argv:
-        return doctor()
     if not argv:
         print(__doc__)
         return 2
+    if argv[0] == "--doctor":
+        return doctor()
+    if argv[0] == "--routes":
+        return routes()
+    if argv[0] == "auth":
+        return cmd_auth(argv[1:])
     if not API_KEY:
         sys.exit("error: set OPENAI_API_KEY or AGNI_API_KEY")
 
@@ -158,21 +403,8 @@ def main() -> int:
             print(msg.get("content") or "(done)")
             return 0
         for call in calls:
-            name = call["function"]["name"]
-            if name not in COMMAND_MAP:
-                result = f"error: unknown tool {name}"
-            else:
-                args = json.loads(call["function"]["arguments"] or "{}")
-                tool_argv = [str(a) for a in args.get("argv", [])]
-                print(f"$ {COMMAND_MAP[name]} {' '.join(tool_argv)}", flush=True)
-                result = run_tool(name, tool_argv)
-            messages.append(
-                {
-                    "role": "tool",
-                    "tool_call_id": call["id"],
-                    "content": result,
-                }
-            )
+            messages.append({"role": "tool", "tool_call_id": call["id"],
+                             "content": dispatch(call)})
     print(f"stopped: hit AGNI_MAX_TURNS={MAX_TURNS}")
     return 1
 
