@@ -10,6 +10,7 @@ Capability index for AGNI.
 | gog | `gog/` | Google Workspace: Gmail/Calendar/Drive/Sheets/Tasks. | `gog/SKILL.md` |
 | android | `android/` | adb + emulator + UIAutomator; app adapters. | `android/SKILL.md` |
 | ios | `ios/` | `xcrun simctl` simulator control. | `ios/SKILL.md` |
+| apple | `apple/` | Apple Account / iCloud on this Mac — Contacts, Messages, iCloud dataclasses. | `apple/SKILL.md` |
 | scheduler | `scheduler/` | Cron-backed recurring jobs (`workspaces/scheduler/schedule`). | `scheduler/SKILL.md` |
 
 ## Auxiliary maps

@@ -6,7 +6,22 @@ description: Google Workspace CLI (`gog`, gogcli v0.40+) for Gmail, Calendar, Dr
 # Gog — Google Workspace CLI
 
 `gog` is installed (Homebrew `gogcli`, v0.40.0). Config at
-`~/.config/gogcli/`; OAuth tokens live in its keyring — zero in-repo state.
+`~/Library/Application Support/gogcli/`; OAuth tokens live in its keyring —
+zero in-repo state.
+
+## AGNI OAuth client
+
+- GCP project: `agni-gog` (gcloud account `adithya@outerscope.xyz`), APIs
+  enabled: gmail, calendar-json, drive, docs, sheets, tasks, people.
+- OAuth client (Desktop type): `153503573320-efaa9p16ns5sfrpkcp7ghl596lcbnt9l`
+  stored via `gog auth credentials set` as client name **`agni`** — pass
+  `--client agni` to every `auth add`/call.
+- Consent screen: External / Testing; the 12 vault Google accounts are listed
+  as test users (aartip3992 and avery@seedboxlabs.co excluded by user).
+- Keyring backend: **file** (macOS Keychain hangs headless).
+  `export GOG_KEYRING_PASSWORD=$(cat .secrets/gog-keyring-pass)` — the file
+  sits at `.secrets/gog-keyring-pass` (git-ignored) alongside the client JSON
+  `.secrets/agni-gog-client.json`.
 
 ## Execution
 
@@ -25,11 +40,20 @@ gog drive search "quarterly" --account=<email> --json --results-only
 ## Auth
 
 ```bash
-gog auth add <email> --services="gmail,calendar,drive,docs,sheets"
+export GOG_KEYRING_PASSWORD=$(cat .secrets/gog-keyring-pass)
+gog auth add <email> --client agni --timeout 15m \
+  --services gmail,calendar,drive,docs,sheets,tasks,contacts,people
 ```
 
-Prints an OAuth URL — the user completes consent in the browser. No
-accounts are registered yet on this machine; add them as needed.
+It auto-opens the URL in the **default browser (Safari)** and spins a
+localhost listener. To keep the session in the shared Chrome profile:
+close the auto-opened Safari tab, paste the printed URL into Chrome, and
+append `&login_hint=<email>&prompt=login` when a different Google account
+is already signed in (skips the account chooser — clicks on it don't land
+reliably). Default flow timeout is short — always pass `--timeout 15m`.
+
+Unverified-app consent shows "Google hasn't verified this app" → Continue →
+scroll → Allow. Enrolled so far: `adithya@outerscope.xyz`.
 
 ## Boundaries (harness-enforced)
 
