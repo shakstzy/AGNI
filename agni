@@ -1,0 +1,181 @@
+#!/usr/bin/env python3
+"""AGNI — a root-level agent harness wiring the GitHub CLI and the browser-use CLI.
+
+An LLM drives a tool loop with exactly two capabilities:
+
+    github(argv)   -> runs `gh <argv...>`            (repos, PRs, issues, gh api, ...)
+    browser(argv)  -> runs `browser-use <argv...>`   (agentic browsing via the browser-use CLI)
+
+Usage:
+    agni "open a PR updating the readme and screenshot github.com first"
+    agni --doctor          # check that gh and browser-use are installed/authed
+    agni --dry-run "..."   # print tool calls without executing them
+
+Env:
+    AGNI_MODEL      model name            (default: gpt-4o)
+    AGNI_BASE_URL   OpenAI-compatible API base (default: https://api.openai.com/v1)
+    OPENAI_API_KEY  API key (or AGNI_API_KEY)
+    AGNI_MAX_TURNS  max tool turns        (default: 25)
+"""
+
+from __future__ import annotations
+
+import json
+import os
+import shutil
+import subprocess
+import sys
+import urllib.error
+import urllib.request
+
+MODEL = os.environ.get("AGNI_MODEL", "gpt-4o")
+BASE_URL = os.environ.get("AGNI_BASE_URL", "https://api.openai.com/v1").rstrip("/")
+API_KEY = os.environ.get("AGNI_API_KEY") or os.environ.get("OPENAI_API_KEY", "")
+MAX_TURNS = int(os.environ.get("AGNI_MAX_TURNS", "25"))
+DRY_RUN = "--dry-run" in sys.argv
+
+SYSTEM_PROMPT = """\
+You are AGNI, a terminal agent. You accomplish the user's task using exactly
+two tools:
+
+- `github`: shell args passed verbatim to the GitHub CLI (`gh`). Use it for
+  anything on GitHub: `gh repo view`, `gh pr create`, `gh issue list`,
+  `gh api`, `gh search`, etc. `gh` is already authenticated.
+- `browser`: shell args passed verbatim to the browser-use CLI
+  (`browser-use`). Use it for anything that needs a real browser: reading
+  pages, filling forms, screenshots, interacting with web UIs.
+
+Rules:
+- Prefer `github` for GitHub data; use `browser` when a page must actually be
+  rendered or clicked through.
+- Never invent URLs, issue numbers, or branch names — fetch them.
+- When the task is complete, reply with a concise summary of what you did.
+- If a tool fails twice, explain the blocker instead of retrying forever.
+"""
+
+TOOLS = [
+    {
+        "type": "function",
+        "function": {
+            "name": "github",
+            "description": "Run the GitHub CLI. `argv` is the full argument list after `gh`, e.g. [\"pr\", \"list\", \"--repo\", \"owner/name\"].",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "argv": {"type": "array", "items": {"type": "string"}},
+                },
+                "required": ["argv"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "browser",
+            "description": "Run the browser-use CLI. `argv` is the full argument list after `browser-use`, e.g. [\"open\", \"https://x.com\"] or [\"state\"].",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "argv": {"type": "array", "items": {"type": "string"}},
+                },
+                "required": ["argv"],
+            },
+        },
+    },
+]
+
+COMMAND_MAP = {"github": "gh", "browser": "browser-use"}
+
+
+def run_tool(name: str, argv: list[str]) -> str:
+    binary = COMMAND_MAP[name]
+    cmd = [binary, *argv]
+    if DRY_RUN:
+        return f"[dry-run] would execute: {' '.join(cmd)}"
+    if not shutil.which(binary):
+        return f"error: `{binary}` is not installed or not on PATH"
+    try:
+        proc = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
+    except subprocess.TimeoutExpired:
+        return "error: command timed out after 300s"
+    out = (proc.stdout + proc.stderr).strip()
+    return out[:20000] if out else f"(exit {proc.returncode}, no output)"
+
+
+def chat(messages: list[dict]) -> dict:
+    body = json.dumps(
+        {"model": MODEL, "messages": messages, "tools": TOOLS}
+    ).encode()
+    req = urllib.request.Request(
+        f"{BASE_URL}/chat/completions",
+        data=body,
+        headers={
+            "Authorization": f"Bearer {API_KEY}",
+            "Content-Type": "application/json",
+        },
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=120) as resp:
+            return json.loads(resp.read())["choices"][0]["message"]
+    except urllib.error.HTTPError as e:
+        sys.exit(f"API error {e.code}: {e.read().decode()[:500]}")
+
+
+def doctor() -> int:
+    ok = True
+    for binary in COMMAND_MAP.values():
+        path = shutil.which(binary)
+        print(f"{'ok ' if path else 'MISSING'} {binary}: {path or 'not on PATH'}")
+        ok &= bool(path)
+    if shutil.which("gh"):
+        auth = subprocess.run(["gh", "auth", "status"], capture_output=True, text=True)
+        print(auth.stdout.strip() or auth.stderr.strip())
+    if not API_KEY:
+        print("MISSING API key: set OPENAI_API_KEY or AGNI_API_KEY")
+        ok = False
+    return 0 if ok else 1
+
+
+def main() -> int:
+    argv = [a for a in sys.argv[1:] if a != "--dry-run"]
+    if "--doctor" in argv:
+        return doctor()
+    if not argv:
+        print(__doc__)
+        return 2
+    if not API_KEY:
+        sys.exit("error: set OPENAI_API_KEY or AGNI_API_KEY")
+
+    messages = [
+        {"role": "system", "content": SYSTEM_PROMPT},
+        {"role": "user", "content": " ".join(argv)},
+    ]
+    for _ in range(MAX_TURNS):
+        msg = chat(messages)
+        messages.append(msg)
+        calls = msg.get("tool_calls") or []
+        if not calls:
+            print(msg.get("content") or "(done)")
+            return 0
+        for call in calls:
+            name = call["function"]["name"]
+            if name not in COMMAND_MAP:
+                result = f"error: unknown tool {name}"
+            else:
+                args = json.loads(call["function"]["arguments"] or "{}")
+                tool_argv = [str(a) for a in args.get("argv", [])]
+                print(f"$ {COMMAND_MAP[name]} {' '.join(tool_argv)}", flush=True)
+                result = run_tool(name, tool_argv)
+            messages.append(
+                {
+                    "role": "tool",
+                    "tool_call_id": call["id"],
+                    "content": result,
+                }
+            )
+    print(f"stopped: hit AGNI_MAX_TURNS={MAX_TURNS}")
+    return 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())
