@@ -1,0 +1,95 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Beautiful.ai Local CLI Adapter powered by MCPorter
+SERVER="beautiful-ai"
+
+usage() {
+  cat <<'EOF'
+Usage: beautiful <command> [options]
+
+Commands:
+  status                    Check Beautiful.ai MCP server status and connectivity
+  auth [--reset]           Run OAuth authentication flow
+  schema                    Inspect live MCP tool definitions and schemas
+  list [args...]            List or search user presentations
+  templates [args...]       List available presentation templates
+  themes [args...]          List brand themes and styling palettes
+  folders [args...]         List folders in workspace
+  get <presentationId>      Get presentation playback and editor details
+  create [key=value...]     Create presentation from outline
+  export <id> <format>      Export presentation to PDF or PPTX
+  call <tool> [key=value...]Invoke any Beautiful.ai MCP tool directly
+
+Examples:
+  beautiful status
+  beautiful list
+  beautiful get -P0_L6JKJmNU9G-psKEh
+  beautiful export -P0_L6JKJmNU9G-psKEh pdf
+  beautiful call list_presentations query="Groundtruth"
+EOF
+}
+
+cmd="${1:-}"
+if [[ -z "$cmd" ]] || [[ "$cmd" == "-h" ]] || [[ "$cmd" == "--help" ]]; then
+  usage
+  exit 0
+fi
+shift
+
+case "$cmd" in
+  status)
+    exec mcporter list "$SERVER" "$@"
+    ;;
+  auth)
+    exec mcporter auth "$SERVER" "$@"
+    ;;
+  schema)
+    exec mcporter list "$SERVER" --schema "$@"
+    ;;
+  list)
+    exec mcporter call "$SERVER.list_presentations" "$@"
+    ;;
+  templates)
+    exec mcporter call "$SERVER.list_presentation_templates" "$@"
+    ;;
+  themes)
+    exec mcporter call "$SERVER.get_themes" "$@"
+    ;;
+  folders)
+    exec mcporter call "$SERVER.get_folders" "$@"
+    ;;
+  get)
+    id="${1:-}"
+    if [[ -z "$id" ]]; then
+      echo "Error: missing presentationId. Usage: beautiful get <presentationId>" >&2
+      exit 1
+    fi
+    exec mcporter call "$SERVER.get_presentation" presentationId="$id"
+    ;;
+  export)
+    id="${1:-}"
+    fmt="${2:-pdf}"
+    if [[ -z "$id" ]]; then
+      echo "Error: missing presentationId. Usage: beautiful export <presentationId> [pdf|pptx]" >&2
+      exit 1
+    fi
+    exec mcporter call "$SERVER.export_presentation" presentationId="$id" format="$fmt"
+    ;;
+  create)
+    exec mcporter call "$SERVER.create_presentation" "$@"
+    ;;
+  call)
+    tool="${1:-}"
+    if [[ -z "$tool" ]]; then
+      echo "Error: missing tool name. Usage: beautiful call <tool_name> [key=value...]" >&2
+      exit 1
+    fi
+    shift
+    exec mcporter call "$SERVER.$tool" "$@"
+    ;;
+  *)
+    # Fallback to direct tool invocation
+    exec mcporter call "$SERVER.$cmd" "$@"
+    ;;
+esac

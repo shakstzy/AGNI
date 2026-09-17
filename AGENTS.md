@@ -33,13 +33,21 @@ harness over local CLIs, browser, and mobile device control.
 - `android` — adb + UIAutomator + helper CLIs; app adapters.
 - `ios` — `xcrun simctl` simulator control.
 - `scheduler` — cron jobs via `workspaces/scheduler/schedule`.
+- `apple` — iCloud sign-in state, Contacts, Messages on this Mac.
+- local adapters — 30 ported HADES CLIs; index in `.agents/skills/REGISTRY.md`.
 
 ### Routed CLIs (`./agni --routes`)
 
 `bw`, `gh`, `gog`, `browser-use`, `adb`, `xcrun simctl`, `emulator`,
 `oathtool`, `schedule`, `stripe`, `supabase`, `firebase`, `gcloud`, `docker`,
 `wrangler`, `vercel`, `cloudflared`, `rclone`, `ffmpeg`, `yt-dlp`,
-`exiftool`, `apify` — each with refusal guards on destructive ops.
+`exiftool`, `apify`, `mcporter`, `ctx7`, `firecrawl`, `postiz`, `catt`,
+`expo`, plus ported skill adapters (`alpaca.py`, `notes.py`, `reminders.py`,
+`bluebubbles.py`, `fbm`, `trends.py`, `home_assistant.py`, `macos.py`,
+`contacts.py`, `msg.py`, `re`, `tagger.py`, `pexels.py`, `beautiful`,
+`mcporter blender`) — each with refusal guards on destructive ops.
+External-but-routed (not yet on PATH): `plaid`, `ntn`, `telegram`, `wacli`,
+`goclone`, `article-shot`, `granola`, `x-cockpit`.
 
 ### Workspaces (`workspaces/<domain>/`)
 

@@ -1,6 +1,6 @@
 # AGNI
 
-Routed multi-system agent harness. One LLM tool loop dispatching to ~20
+Routed multi-system agent harness. One LLM tool loop dispatching to 40+
 subsystems on the HADES operating contract: **deterministic CLIs > headless
 browser > device UI**, in-process secret handling, and hard refusal
 boundaries on irreversible actions.
@@ -32,6 +32,31 @@ boundaries on irreversible actions.
 | `ytdlp` | `yt-dlp` | media download |
 | `exiftool` | `exiftool` | file metadata |
 | `apify` | `apify` | scraping actors/datasets |
+| `mcporter` | `mcporter` | MCP server mgmt, auth, CLI generation |
+| `ctx7` | `ctx7` | live library docs lookup |
+| `firecrawl` | `firecrawl` | web → Markdown scraping |
+| `postiz` | `postiz` | social media scheduling |
+| `catt` | `catt` | Chromecast discovery/cast/control |
+| `expo` | `npx expo` | React Native/EAS builds |
+| `alpaca` | `alpaca.py` | Alpaca portfolio/orders/bars/news |
+| `apple-notes` | `notes.py` | Notes.app on personal Mac |
+| `apple-reminders` | `reminders.py` | Reminders.app on personal Mac |
+| `bluebubbles` | `bluebubbles.py` | iMessage chats/messages/media |
+| `fbm` | `fbm` | Facebook Marketplace |
+| `trends` | `trends.py` | Google Trends velocity/breakouts |
+| `home-assistant` | `home_assistant.py` | HA entities/services |
+| `macos` | `macos.py` | remote mac exec/xcodebuild (SSH) |
+| `contacts` | `contacts.py` | Contacts.app queries |
+| `msg` | `msg.py` | unified messaging router |
+| `re` | `re` | real-estate lookups/DSCR/offers |
+| `whisper-at` | `tagger.py` | speech STT + audio event tags |
+| `pexels` | `pexels.py` | stock photos/B-roll |
+| `beautiful` | `beautiful` | Beautiful.ai decks via MCPorter |
+| `blender` | `mcporter blender` | BlenderMCP 3D scenes |
+
+Routed but not yet installed here (external binaries; `./agni --doctor`
+flags MISSING): `plaid`, `ntn` (notion), `telegram`, `wacli` (whatsapp),
+`goclone`, `article-shot`, `granola`, `x-cockpit`.
 
 `./agni --routes` prints this table; `./agni --doctor` reports binary +
 auth status per subsystem.
@@ -39,7 +64,9 @@ auth status per subsystem.
 ## Skills & workspaces
 
 - `.agents/skills/` — `auth` (encloses `bitwarden`), `browser` (79 sitemaps,
-  single shared Chrome profile), `gog`, `android`, `ios`, `scheduler`.
+  single shared Chrome profile), `gog`, `android`, `ios`, `apple`,
+  `scheduler`, plus 30+ ported HADES CLI adapters — index in
+  `.agents/skills/REGISTRY.md`.
 - `workspaces/scheduler/` — `schedule` CLI + `jobs.json`, crontab sync.
 
 ## Auth / login flow

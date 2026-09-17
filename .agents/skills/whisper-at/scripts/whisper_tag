@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+PYTHON_EXEC="/home/shakstzy/comfy-venv/bin/python"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
+
+exec "${PYTHON_EXEC}" "${SCRIPT_DIR}/tagger.py" "$@"

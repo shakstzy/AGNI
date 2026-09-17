@@ -214,6 +214,185 @@ SYSTEMS: dict[str, dict] = {
         "desc": "Apify actors/runs/datasets for scraping pipelines.",
         "guards": [],
     },
+    "mcporter": {
+        "bin": ["mcporter"],
+        "desc": "MCP server discovery/auth/tool invocation and CLI generation.",
+        "guards": [],
+    },
+    "ctx7": {
+        "bin": ["ctx7"],
+        "desc": "Context7 live library docs/API lookup.",
+        "guards": [],
+    },
+    "firecrawl": {
+        "bin": ["firecrawl"],
+        "desc": "Web page/domain → clean Markdown scraping.",
+        "guards": [],
+    },
+    "postiz": {
+        "bin": ["postiz"],
+        "desc": "Postiz social media scheduling.",
+        "guards": [
+            (r"(post|publish|schedule)\b", "publishing/scheduling posts requires human approval"),
+        ],
+    },
+    "catt": {
+        "bin": ["catt"],
+        "desc": "Chromecast discovery, casting, playback control.",
+        "guards": [],
+    },
+    "expo": {
+        "bin": ["npx", "expo"],
+        "desc": "Expo/EAS: React Native dev servers, prebuild, cloud builds.",
+        "guards": [
+            (r"submit\b", "store submission requires human approval"),
+        ],
+    },
+    "alpaca": {
+        "bin": ["python3", os.path.join(_HERE, ".agents/skills/alpaca/alpaca.py")],
+        "desc": "Alpaca Markets: positions, orders, clock, bars, news.",
+        "guards": [
+            (r"(order|buy|sell)\b", "trade orders require human approval"),
+        ],
+    },
+    "apple-notes": {
+        "bin": ["python3", os.path.join(_HERE, ".agents/skills/apple-notes/notes.py")],
+        "desc": "Apple Notes.app access on the personal Mac (search/create/read).",
+        "guards": [
+            (r"delete\b", "deleting notes requires human approval"),
+        ],
+    },
+    "apple-reminders": {
+        "bin": ["python3", os.path.join(_HERE, ".agents/skills/apple-reminders/reminders.py")],
+        "desc": "Apple Reminders.app lists/tasks on the personal Mac.",
+        "guards": [
+            (r"(delete|complete)\b", "completing/deleting reminders requires human approval"),
+        ],
+    },
+    "bluebubbles": {
+        "bin": ["python3", os.path.join(_HERE, ".agents/skills/bluebubbles/bluebubbles.py")],
+        "desc": "BlueBubbles iMessage: chats, messages, contacts, media.",
+        "guards": [
+            (r"^send\b", "sending iMessages requires human approval"),
+        ],
+    },
+    "fbm": {
+        "bin": [os.path.join(_HERE, ".agents/skills/facebook-marketplace/fbm")],
+        "desc": "Facebook Marketplace: listings, deals search, item details, monitors.",
+        "guards": [
+            (r"(post|message|offer)\b", "posting/messaging sellers requires human approval"),
+        ],
+    },
+    "trends": {
+        "bin": ["python3", os.path.join(_HERE, ".agents/skills/google-trends/trends.py")],
+        "desc": "Google Trends: search volume velocity and breakout detection.",
+        "guards": [],
+    },
+    "home-assistant": {
+        "bin": ["python3", os.path.join(_HERE, ".agents/skills/home-assistant/home_assistant.py")],
+        "desc": "Home Assistant REST: entity states, services, scenes.",
+        "guards": [
+            (r"(lock|alarm|arm|disarm)\b", "locks/alarms require human approval"),
+        ],
+    },
+    "macos": {
+        "bin": ["python3", os.path.join(_HERE, ".agents/skills/macos/macos.py")],
+        "desc": "Remote macOS host: exec, xcodebuild, tool discovery over pinned SSH.",
+        "guards": [
+            (r"(rm -|sudo|shutdown|reboot)\b", "destructive remote ops require human approval"),
+        ],
+    },
+    "contacts": {
+        "bin": ["python3", os.path.join(_HERE, ".agents/skills/macos-contacts/contacts.py")],
+        "desc": "Apple Contacts.app queries on the personal Mac.",
+        "guards": [],
+    },
+    "msg": {
+        "bin": ["python3", os.path.join(_HERE, ".agents/skills/msg/msg.py")],
+        "desc": "Unified messaging router (WhatsApp/iMessage/Telegram) with contact resolution.",
+        "guards": [
+            (r"^send\b", "sending messages requires human approval"),
+        ],
+    },
+    "re": {
+        "bin": [os.path.join(_HERE, ".agents/skills/real-estate/re")],
+        "desc": "Real estate: Redfin/Zillow lookups, FMR, DSCR, cash flow, offers.",
+        "guards": [
+            (r"offer\b.*(submit|send)", "submitting offers requires human approval"),
+        ],
+    },
+    "whisper-at": {
+        "bin": ["python3", os.path.join(_HERE, ".agents/skills/whisper-at/scripts/tagger.py")],
+        "desc": "Audio: speech transcription + 527-class event tagging.",
+        "guards": [],
+    },
+    "pexels": {
+        "bin": ["python3", os.path.join(_HERE, ".agents/skills/pexels/pexels.py")],
+        "desc": "Pexels stock photos/B-roll search and download (PEXELS_API_KEY).",
+        "guards": [],
+    },
+    "beautiful": {
+        "bin": [os.path.join(_HERE, ".agents/skills/beautiful/beautiful")],
+        "desc": "Beautiful.ai slide decks via MCPorter.",
+        "guards": [
+            (r"(publish|share|present)\b", "sharing decks requires human approval"),
+        ],
+    },
+    "plaid": {
+        "bin": ["plaid"],
+        "desc": "Plaid: linked bank balances, liabilities, holdings, transactions.",
+        "guards": [
+            (r"transfer\b", "money movement requires human approval"),
+        ],
+    },
+    "notion": {
+        "bin": ["ntn"],
+        "desc": "Notion workspaces/databases/pages via ntn CLI.",
+        "guards": [
+            (r"(delete|archive|trash)\b", "deleting Notion content requires human approval"),
+        ],
+    },
+    "telegram": {
+        "bin": ["telegram"],
+        "desc": "Telegram: chats, messages, contacts, send.",
+        "guards": [
+            (r"^send\b", "sending messages requires human approval"),
+        ],
+    },
+    "whatsapp": {
+        "bin": ["wacli"],
+        "desc": "WhatsApp via wacli: sync, chats, contacts, send.",
+        "guards": [
+            (r"^send\b", "sending messages requires human approval"),
+        ],
+    },
+    "goclone": {
+        "bin": ["goclone"],
+        "desc": "Website mirroring for offline analysis.",
+        "guards": [],
+    },
+    "article-shot": {
+        "bin": ["article-shot"],
+        "desc": "Retina high-DPI screenshots of articles/papers/repos.",
+        "guards": [],
+    },
+    "granola": {
+        "bin": ["granola"],
+        "desc": "Granola meeting notes, transcripts, folders.",
+        "guards": [],
+    },
+    "x-cockpit": {
+        "bin": ["x-cockpit"],
+        "desc": "Twitter/X virality mining and breakout clustering.",
+        "guards": [
+            (r"(post|tweet|reply|dm)\b", "posting to X requires human approval"),
+        ],
+    },
+    "blender": {
+        "bin": ["mcporter", "blender"],
+        "desc": "BlenderMCP via mcporter: 3D scenes, objects, python exec, asset gen.",
+        "guards": [],
+    },
 }
 
 # Output redaction: never let secrets reach the model transcript.

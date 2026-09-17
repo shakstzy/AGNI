@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# Thin wrapper around the Python real-estate scrapers.
+#
+# Usage: ./re <verb> [args...]
+#   ./re redfin search "Austin, TX" --max-price 700000 --min-beds 3
+#   ./re redfin property https://www.redfin.com/TX/Austin/...
+#   ./re zillow search "Austin, TX" --max-price 700000
+#   ./re zillow property https://www.zillow.com/homedetails/.../<zpid>_zpid/
+#   ./re lookup "5509 Casco Walk Austin TX 78724"
+#   ./re rent-estimate "5509 Casco Walk Austin TX 78724"
+#   ./re cashflow "5509 Casco Walk Austin TX 78724"
+#   ./re batch lookup addrs.txt
+set -euo pipefail
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do
+    DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
+    SOURCE="$(readlink "$SOURCE")"
+    [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
+done
+SCRIPT_DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
+cd "$SCRIPT_DIR"
+if [[ $# -lt 1 ]] || [[ "$1" == "--help" ]] || [[ "$1" == "-h" ]] || [[ "$1" == "help" ]]; then
+    echo "usage: re <redfin|zillow|lookup|parcel|rent-estimate|fmr|section8|dscr|cashflow|recommend|offer|batch> [args...]" >&2
+    echo "" >&2
+    echo "Commands:" >&2
+    echo "  offer         Two-tier institutional offer generation (Fast DSCR vs 80-15-5 Terms), PDF LOI & outreach" >&2
+    echo "  recommend     Budget-aware capital optimization (top affordable + asymmetric stretch deals)" >&2
+    echo "  lookup        Side-by-side Redfin + Zillow property extraction & comparison" >&2
+    echo "  parcel        Deep parcel-by-parcel analysis (APN, lot, flood, zoning, reassessment)" >&2
+    echo "  rent-estimate Triangulated market rent comps (Zillow bounding-box + Redfin AVM)" >&2
+    echo "  fmr           HUD Small Area Fair Market Rent (SAFMR) lookup by ZIP & bed count" >&2
+    echo "  section8      Section 8 voucher economics, utility allowances, payment standards" >&2
+    echo "  dscr          DSCR loan underwriting, sizing, interest rate matrix & debt yield" >&2
+    echo "  cashflow      4-scenario pro-forma analysis & recomputable markdown dossier" >&2
+    echo "  redfin        Redfin property search, listing details, sale history & comps" >&2
+    echo "  zillow        Zillow search, property details, and lazy-loaded attributes" >&2
+    echo "  batch         Batch process addresses for lookup, cashflow, or parcel intelligence" >&2
+    exit 0
+fi
+VERB="$1"
+shift
+MODULE="${VERB//-/_}"
+exec uv run --quiet python "scripts/${MODULE}.py" "$@"
