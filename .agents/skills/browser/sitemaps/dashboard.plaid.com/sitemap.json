@@ -1,0 +1,70 @@
+{
+  "site": "dashboard.plaid.com",
+  "description": "Plaid developer portal for financial API keys, item connection health, logs, and sandbox testing",
+  "base_url": "https://dashboard.plaid.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "signin": {
+      "path": "/signin",
+      "url_patterns": [
+        "https://dashboard.plaid.com/signin*"
+      ],
+      "semantic_anchors": {
+        "email": "input[type='email']",
+        "password": "input[type='password']",
+        "submit": "button[type='submit']"
+      },
+      "key_elements": {
+        "email_input": {
+          "role": "textbox",
+          "name": "Email"
+        },
+        "password_input": {
+          "role": "textbox",
+          "name": "Password"
+        }
+      },
+      "summary": "Plaid developer portal login page."
+    },
+    "overview": {
+      "path": "/overview",
+      "url_patterns": [
+        "https://dashboard.plaid.com/overview*",
+        "https://dashboard.plaid.com/"
+      ],
+      "semantic_anchors": {
+        "api_usage": "[data-testid='api-usage']",
+        "items_count": "[data-testid='items-count']"
+      },
+      "key_elements": {
+        "sidebar_nav": {
+          "role": "navigation",
+          "name": "Main Navigation"
+        },
+        "env_badge": {
+          "role": "status",
+          "name": "Environment"
+        }
+      },
+      "summary": "Plaid developer environment metrics, linked items, and usage summary."
+    },
+    "team_keys": {
+      "path": "/team/keys",
+      "url_patterns": [
+        "https://dashboard.plaid.com/team/keys*"
+      ],
+      "semantic_anchors": {
+        "client_id": "[data-testid='client-id-value']",
+        "sandbox_secret": "[data-testid='sandbox-secret-value']"
+      },
+      "key_elements": {
+        "keys_table": {
+          "role": "region",
+          "name": "API Keys"
+        }
+      },
+      "summary": "Plaid client ID and environment secret management."
+    }
+  }
+}

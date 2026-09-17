@@ -1,0 +1,68 @@
+{
+  "site": "finance.yahoo.com",
+  "description": "Yahoo Finance market quotes, portfolio tracking, watchlist monitoring, stock financials, and market news",
+  "base_url": "https://finance.yahoo.com",
+  "login_required": false,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "home": {
+      "path": "/",
+      "url_patterns": [
+        "https://finance.yahoo.com/*"
+      ],
+      "semantic_anchors": {
+        "search_input": "#ybar-sbq",
+        "market_summary": "#marketsummary-lead-wrapper"
+      },
+      "key_elements": {
+        "search_box": {
+          "role": "searchbox",
+          "name": "Search for news, symbols or companies"
+        },
+        "portfolio_link": {
+          "role": "link",
+          "name": "My Portfolio"
+        }
+      },
+      "summary": "Yahoo Finance homepage with major market indices and financial news."
+    },
+    "portfolios": {
+      "path": "/portfolios",
+      "url_patterns": [
+        "https://finance.yahoo.com/portfolios*"
+      ],
+      "semantic_anchors": {
+        "portfolio_table": "[data-testid='portfolio-table']",
+        "create_portfolio": "[data-testid='create-portfolio-btn']"
+      },
+      "key_elements": {
+        "holdings_table": {
+          "role": "table",
+          "name": "Portfolio Holdings"
+        }
+      },
+      "summary": "Tracked investor portfolios, holdings, and watchlists."
+    },
+    "quote": {
+      "path": "/quote/*",
+      "url_patterns": [
+        "https://finance.yahoo.com/quote/*"
+      ],
+      "semantic_anchors": {
+        "quote_header": "[data-testid='quote-hdr']",
+        "market_price": "fin-streamer[data-field='regularMarketPrice']"
+      },
+      "key_elements": {
+        "ticker_symbol": {
+          "role": "heading",
+          "name": "Ticker"
+        },
+        "stats_tab": {
+          "role": "tab",
+          "name": "Statistics"
+        }
+      },
+      "summary": "Detailed equity symbol quote, real-time price, and historical performance."
+    }
+  }
+}

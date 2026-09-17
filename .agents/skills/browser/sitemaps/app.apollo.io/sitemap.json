@@ -1,0 +1,30 @@
+{
+  "site": "app.apollo.io",
+  "description": "Apollo B2B sales intelligence, contact finder, company enrichment, and email sequence outreach",
+  "base_url": "https://app.apollo.io",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "people_finder": {
+      "path": "/#/people",
+      "url_patterns": [
+        "https://app.apollo.io/#/people*"
+      ],
+      "semantic_anchors": {
+        "search_input": "input[placeholder*='Search']",
+        "people_table": ".finder-results-table"
+      },
+      "key_elements": {
+        "search_field": {
+          "role": "searchbox",
+          "name": "Search People"
+        },
+        "contact_rows": {
+          "selector": ".finder-row",
+          "name": "Contact Result Rows"
+        }
+      },
+      "summary": "B2B people directory with persona, title, seniority, and industry filters."
+    }
+  }
+}

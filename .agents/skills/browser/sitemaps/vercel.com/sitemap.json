@@ -1,0 +1,51 @@
+{
+  "site": "vercel.com",
+  "description": "Vercel cloud platform for frontend deployments, preview branches, domains, and environment settings",
+  "base_url": "https://vercel.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "dashboard": {
+      "path": "/dashboard",
+      "url_patterns": [
+        "https://vercel.com/dashboard*"
+      ],
+      "semantic_anchors": {
+        "project_cards": "[data-testid='project-card']",
+        "team_picker": "[data-testid='team-switcher']"
+      },
+      "key_elements": {
+        "project_list": {
+          "selector": "[data-testid='projects-list']",
+          "name": "Projects List"
+        },
+        "add_project_btn": {
+          "role": "button",
+          "name": "Add New"
+        }
+      },
+      "summary": "Vercel team projects overview showing deployment status, production domains, and git branches."
+    },
+    "deployments": {
+      "path": "/<team>/<project>/deployments",
+      "url_patterns": [
+        "https://vercel.com/*/*/deployments*"
+      ],
+      "semantic_anchors": {
+        "deployment_rows": "[data-testid='deployment-row']",
+        "status_badge": ".status-badge"
+      },
+      "key_elements": {
+        "deployment_list": {
+          "role": "table",
+          "name": "Deployments"
+        },
+        "redeploy_btn": {
+          "role": "button",
+          "name": "Redeploy"
+        }
+      },
+      "summary": "Commit build logs, build execution status, and serverless function logs."
+    }
+  }
+}

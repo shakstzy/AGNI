@@ -1,0 +1,60 @@
+{
+  "site": "gemini.google.com",
+  "description": "Google Gemini consumer AI assistant, Deep Research, and custom Gems workspace",
+  "base_url": "https://gemini.google.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "app": {
+      "path": "/app",
+      "url_patterns": [
+        "https://gemini.google.com/app*"
+      ],
+      "semantic_anchors": {
+        "prompt_box": "div.ql-editor",
+        "send_button": "button[aria-label*='Send']",
+        "model_pill": "button[data-test-id='model-picker-pill']"
+      },
+      "key_elements": {
+        "chat_input": {
+          "role": "textbox",
+          "name": "Enter a prompt here"
+        },
+        "model_picker": {
+          "role": "button",
+          "name": "Model picker"
+        },
+        "file_upload": {
+          "role": "button",
+          "name": "Upload image or file"
+        },
+        "recent_chats": {
+          "role": "navigation",
+          "name": "Recent chats"
+        }
+      },
+      "summary": "Main Gemini interactive chat session with file upload, Deep Research, and voice controls."
+    },
+    "gems": {
+      "path": "/gems",
+      "url_patterns": [
+        "https://gemini.google.com/gems*"
+      ],
+      "semantic_anchors": {
+        "new_gem_btn": "button:has-text('New Gem')",
+        "gems_list": ".gem-card"
+      },
+      "key_elements": {
+        "create_gem_btn": {
+          "role": "button",
+          "name": "New Gem"
+        },
+        "gems_grid": {
+          "selector": ".gems-container",
+          "name": "Gems Grid"
+        }
+      },
+      "summary": "Custom Gems workspace for managing specialized persona bots and system instructions."
+    }
+  }
+}

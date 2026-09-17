@@ -1,0 +1,51 @@
+{
+  "site": "x.com",
+  "description": "X social network for real-time news, tech announcements, creator feeds, and post monitoring",
+  "base_url": "https://x.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "home": {
+      "path": "/home",
+      "url_patterns": [
+        "https://x.com/home*"
+      ],
+      "semantic_anchors": {
+        "primary_column": "[data-testid='primaryColumn']",
+        "search_box": "[data-testid='SearchBox_Search_Input']"
+      },
+      "key_elements": {
+        "timeline_tweets": {
+          "selector": "article[data-testid='tweet']",
+          "name": "Tweets / Posts"
+        },
+        "search_input": {
+          "role": "combobox",
+          "name": "Search query"
+        }
+      },
+      "summary": "Main timeline stream showing For You / Following post updates."
+    },
+    "profile": {
+      "path": "/<username>",
+      "url_patterns": [
+        "https://x.com/*"
+      ],
+      "semantic_anchors": {
+        "user_name": "[data-testid='UserName']",
+        "bio": "[data-testid='UserDescription']"
+      },
+      "key_elements": {
+        "profile_header": {
+          "selector": "[data-testid='UserProfileHeader_Items']",
+          "name": "Profile Header"
+        },
+        "pinned_tweet": {
+          "selector": "[data-testid='socialContext']",
+          "name": "Pinned Post"
+        }
+      },
+      "summary": "User profile overview with bio, follower count, and media tabs."
+    }
+  }
+}

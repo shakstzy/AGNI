@@ -1,0 +1,89 @@
+{
+  "site": "skiplagged.com",
+  "description": "Skiplagged cheap flight finder, hidden-city routing, deals, and airline booking handoff",
+  "base_url": "https://skiplagged.com",
+  "login_required": false,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "home": {
+      "path": "/",
+      "url_patterns": [
+        "https://skiplagged.com/",
+        "https://skiplagged.com/#*"
+      ],
+      "semantic_anchors": {
+        "flight_search_box": "#search-form",
+        "origin": "input#src-input, input[placeholder*='Departing from']",
+        "destination": "input#dst-input, input[placeholder*='Arriving at']",
+        "depart_date": "input#depart-input, input[placeholder*='Depart']",
+        "search_button": "button[type='submit'], .search-button"
+      },
+      "key_elements": {
+        "origin_input": {
+          "selector": "input#src-input, input[placeholder*='Departing']",
+          "name": "Origin Airport"
+        },
+        "destination_input": {
+          "selector": "input#dst-input, input[placeholder*='Arriving']",
+          "name": "Destination Airport"
+        },
+        "search_btn": {
+          "role": "button",
+          "name": "Search Flights"
+        }
+      },
+      "summary": "Skiplagged homepage with search form for direct, layover, and hidden-city flights."
+    },
+    "flight_results": {
+      "path": "/flights",
+      "url_patterns": [
+        "https://skiplagged.com/flights/*"
+      ],
+      "semantic_anchors": {
+        "results_container": "#results-container, .trips-container",
+        "trip_card": ".trip-item, .flight-card",
+        "sort_filter": ".sort-filter-bar, .filters"
+      },
+      "key_elements": {
+        "flight_cards": {
+          "selector": ".trip-item, [data-trip-id]",
+          "name": "Flight Result Cards"
+        },
+        "price_tag": {
+          "selector": ".price, .trip-cost",
+          "name": "Flight Price"
+        },
+        "hidden_city_tag": {
+          "selector": ".hidden-city-badge, .skiplagged-exclusive",
+          "name": "Hidden City Indicator"
+        },
+        "select_flight_btn": {
+          "role": "button",
+          "name": "Select / Book Flight"
+        }
+      },
+      "summary": "Flight search results matrix displaying prices, airlines, layovers, and hidden-city route indicators."
+    },
+    "deals": {
+      "path": "/deals",
+      "url_patterns": [
+        "https://skiplagged.com/deals*"
+      ],
+      "semantic_anchors": {
+        "deals_container": ".deals-grid, #deals-container",
+        "deal_card": ".deal-card, .deal-item"
+      },
+      "key_elements": {
+        "deal_items": {
+          "selector": ".deal-card, .deal-item",
+          "name": "Flight Deal Cards"
+        },
+        "discount_badge": {
+          "selector": ".discount, .savings-badge",
+          "name": "Discount Percentage"
+        }
+      },
+      "summary": "Curated airfare deals, extreme discounts, and low-fare glitch feeds."
+    }
+  }
+}

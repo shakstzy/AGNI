@@ -1,0 +1,30 @@
+{
+  "site": "app.openmart.com",
+  "description": "Openmart AI-powered SMB and local retail business leads search, maps discovery, and contact finding",
+  "base_url": "https://app.openmart.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "leads": {
+      "path": "/leads",
+      "url_patterns": [
+        "https://app.openmart.com/leads*"
+      ],
+      "semantic_anchors": {
+        "search_input": "input[placeholder*='Search']",
+        "leads_grid": ".leads-container"
+      },
+      "key_elements": {
+        "search_field": {
+          "role": "searchbox",
+          "name": "Search SMBs"
+        },
+        "lead_cards": {
+          "selector": ".lead-card",
+          "name": "Business Cards"
+        }
+      },
+      "summary": "SMB directory search showing store names, reviews, emails, and phone numbers."
+    }
+  }
+}

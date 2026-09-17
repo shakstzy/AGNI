@@ -1,0 +1,30 @@
+{
+  "site": "adsmanager.facebook.com",
+  "description": "Meta Ads Manager for ad campaign monitoring, ad sets, creative assets, and performance spend tracking",
+  "base_url": "https://adsmanager.facebook.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "campaigns": {
+      "path": "/adsmanager/manage/campaigns",
+      "url_patterns": [
+        "https://adsmanager.facebook.com/adsmanager/manage/campaigns*"
+      ],
+      "semantic_anchors": {
+        "campaign_table": "[data-testid='campaigns-table']",
+        "account_switcher": "[data-testid='account-picker']"
+      },
+      "key_elements": {
+        "campaign_rows": {
+          "selector": ".ads-table-row",
+          "name": "Campaign Rows"
+        },
+        "spend_metric": {
+          "selector": ".spend-cell",
+          "name": "Amount Spent"
+        }
+      },
+      "summary": "Campaign reporting dashboard showing impressions, CTR, CPC, and ROAS."
+    }
+  }
+}

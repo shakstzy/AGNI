@@ -1,0 +1,51 @@
+{
+  "site": "autods.com",
+  "description": "AutoDS dropshipping automation platform for product import, pricing rules, and auto-ordering",
+  "base_url": "https://platform.autods.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "dashboard": {
+      "path": "/dashboard",
+      "url_patterns": [
+        "https://platform.autods.com/dashboard*"
+      ],
+      "semantic_anchors": {
+        "sidebar": "nav.sidebar",
+        "unfulfilled": "Orders to fulfill"
+      },
+      "key_elements": {
+        "navigation": {
+          "role": "navigation",
+          "name": "Platform Navigation"
+        },
+        "active_store": {
+          "selector": ".store-select",
+          "name": "Active Store Selector"
+        }
+      },
+      "summary": "Main performance overview showing untracked orders, balance, and inventory monitors."
+    },
+    "products": {
+      "path": "/products",
+      "url_patterns": [
+        "https://platform.autods.com/products*"
+      ],
+      "semantic_anchors": {
+        "add_product": "Add Products",
+        "table": ".products-table"
+      },
+      "key_elements": {
+        "add_btn": {
+          "role": "button",
+          "name": "Add Products"
+        },
+        "item_list": {
+          "role": "table",
+          "name": "Untracked & Monitored Products"
+        }
+      },
+      "summary": "Drafts, untracked listings, and monitored inventory list."
+    }
+  }
+}

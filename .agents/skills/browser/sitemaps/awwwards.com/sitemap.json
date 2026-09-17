@@ -1,0 +1,30 @@
+{
+  "site": "awwwards.com",
+  "description": "Awwwards web design inspiration, Site of the Day archives, design systems, and developer awards",
+  "base_url": "https://www.awwwards.com",
+  "login_required": false,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "websites": {
+      "path": "/websites/",
+      "url_patterns": [
+        "https://www.awwwards.com/websites*"
+      ],
+      "semantic_anchors": {
+        "gallery": ".list-items",
+        "sotd_card": ".box-item"
+      },
+      "key_elements": {
+        "site_cards": {
+          "selector": ".box-item",
+          "name": "Awarded Website Cards"
+        },
+        "filter_menu": {
+          "selector": "#filters",
+          "name": "Filter Menu"
+        }
+      },
+      "summary": "Curated directory of awarded websites, tags, scores, and design credits."
+    }
+  }
+}

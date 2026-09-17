@@ -1,0 +1,39 @@
+{
+  "site": "toyotafinancial.com",
+  "description": "Toyota Financial vehicle financing, auto lease and loan details, payment schedules, and payoff quotes",
+  "base_url": "https://www.toyotafinancial.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "login": {
+      "path": "/dss/login",
+      "selectors": {
+        "user_field": "input[name='username']",
+        "password_field": "input[name='password']",
+        "login_btn": "button:has-text('Log In')"
+      }
+    },
+    "dashboard": {
+      "path": "/us/en/dashboard.html",
+      "url_patterns": [
+        "https://www.toyotafinancial.com/us/en/dashboard*"
+      ],
+      "semantic_anchors": {
+        "vehicle_card": ".vehicle-details-card",
+        "payment_due": ".payment-due-date",
+        "payoff_quote": ".payoff-amount"
+      },
+      "key_elements": {
+        "account_summary": {
+          "role": "region",
+          "name": "Account Overview"
+        },
+        "make_payment_btn": {
+          "role": "button",
+          "name": "Make a Payment"
+        }
+      },
+      "summary": "Vehicle account dashboard with monthly payment amount, due date, and payoff quote."
+    }
+  }
+}

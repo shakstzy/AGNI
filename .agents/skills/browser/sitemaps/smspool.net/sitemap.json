@@ -1,0 +1,117 @@
+{
+  "site": "smspool.net",
+  "description": "SMSPool temporary non-VoIP SMS verification and disposable phone number provider",
+  "base_url": "https://www.smspool.net",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "order": {
+      "path": "/order",
+      "url_patterns": [
+        "https://www.smspool.net/order*",
+        "https://smspool.net/order*"
+      ],
+      "semantic_anchors": {
+        "country_select": "#country, select[name='country']",
+        "service_select": "#service, select[name='service']",
+        "quick_order_button": "button:has-text('Quick Order'), button[type='submit']",
+        "pricing_display": ".pricing, .price-display"
+      },
+      "key_elements": {
+        "country_picker": {
+          "selector": "#country, select[name='country']",
+          "name": "Country Selection Dropdown"
+        },
+        "service_picker": {
+          "selector": "#service, select[name='service']",
+          "name": "Target Service Dropdown (e.g., Tinder, OpenAI, Google)"
+        },
+        "order_btn": {
+          "role": "button",
+          "name": "Quick Order Button"
+        },
+        "active_number": {
+          "selector": ".phone-number, .allocated-number",
+          "name": "Allocated Phone Number"
+        }
+      },
+      "summary": "Configure target service and country to order temporary non-VoIP verification number."
+    },
+    "history": {
+      "path": "/history",
+      "url_patterns": [
+        "https://www.smspool.net/history*",
+        "https://smspool.net/history*"
+      ],
+      "semantic_anchors": {
+        "orders_table": "table.orders, #order-history",
+        "sms_code": ".sms-code, .verification-code",
+        "order_status": ".order-status, .badge"
+      },
+      "key_elements": {
+        "orders_grid": {
+          "selector": "table.orders, .history-container",
+          "name": "Order History Table"
+        },
+        "code_display": {
+          "selector": ".sms-code, td.code",
+          "name": "Received SMS Verification Code"
+        },
+        "cancel_order_btn": {
+          "role": "button",
+          "name": "Cancel Order and Refund"
+        }
+      },
+      "summary": "View active and past orders, monitor incoming SMS OTP codes, and trigger refunds for expired or cancelled numbers."
+    },
+    "deposit": {
+      "path": "/deposit",
+      "url_patterns": [
+        "https://www.smspool.net/deposit*",
+        "https://smspool.net/deposit*"
+      ],
+      "semantic_anchors": {
+        "balance_badge": ".balance, #user-balance",
+        "payment_gateways": ".payment-methods, #payment-form"
+      },
+      "key_elements": {
+        "current_balance": {
+          "selector": ".balance-amount, #balance",
+          "name": "Current Account Balance"
+        },
+        "deposit_methods": {
+          "selector": ".payment-options",
+          "name": "Deposit Methods (Crypto / Credit Card)"
+        }
+      },
+      "summary": "Account balance view and funding options."
+    },
+    "login": {
+      "path": "/login",
+      "url_patterns": [
+        "https://www.smspool.net/login*",
+        "https://smspool.net/login*"
+      ],
+      "semantic_anchors": {
+        "username_field": "input[name='username'], #username",
+        "password_field": "input[name='password'], #password",
+        "submit_button": "button[type='submit']"
+      },
+      "key_elements": {
+        "username_input": {
+          "selector": "input[name='username'], #username",
+          "name": "Username Field"
+        },
+        "password_input": {
+          "selector": "input[name='password'], #password",
+          "name": "Password Field"
+        },
+        "login_submit": {
+          "role": "button",
+          "name": "Sign In Button"
+        }
+      },
+      "summary": "Authentication portal for SMSPool dashboard."
+    }
+  }
+}

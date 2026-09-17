@@ -1,0 +1,30 @@
+{
+  "site": "ads.google.com",
+  "description": "Google Ads advertising console for search/display campaigns, keyword planner, and ad spend monitoring",
+  "base_url": "https://ads.google.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "campaigns": {
+      "path": "/aw/campaigns",
+      "url_patterns": [
+        "https://ads.google.com/aw/campaigns*"
+      ],
+      "semantic_anchors": {
+        "campaigns_table": "[data-e2e='campaigns-table']",
+        "account_switcher": "[data-e2e='account-selector']"
+      },
+      "key_elements": {
+        "campaign_rows": {
+          "selector": ".campaign-row",
+          "name": "Campaign Rows"
+        },
+        "cost_metric": {
+          "selector": ".metric-cost",
+          "name": "Campaign Cost"
+        }
+      },
+      "summary": "Google Ads campaigns dashboard showing impressions, clicks, CPC, and total spend."
+    }
+  }
+}

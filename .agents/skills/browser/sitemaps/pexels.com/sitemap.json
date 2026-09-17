@@ -1,0 +1,30 @@
+{
+  "site": "pexels.com",
+  "description": "Pexels high-quality stock photography, free stock video library, and curated creative collections",
+  "base_url": "https://www.pexels.com",
+  "login_required": false,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "search": {
+      "path": "/search/<query>/",
+      "url_patterns": [
+        "https://www.pexels.com/search/*"
+      ],
+      "semantic_anchors": {
+        "search_grid": "[data-testid='photo-grid']",
+        "search_box": "#search"
+      },
+      "key_elements": {
+        "photo_cards": {
+          "selector": "[data-testid='photo-card']",
+          "name": "Photo Card"
+        },
+        "download_btn": {
+          "selector": "a[download]",
+          "name": "Download Button"
+        }
+      },
+      "summary": "Stock photo search grid with photographer attribution and free download options."
+    }
+  }
+}

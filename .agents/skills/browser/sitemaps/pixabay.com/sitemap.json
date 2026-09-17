@@ -1,0 +1,51 @@
+{
+  "site": "pixabay.com",
+  "description": "Pixabay royalty-free stock imagery, vector graphics, illustration, and footage search",
+  "base_url": "https://pixabay.com",
+  "login_required": false,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "home": {
+      "path": "/",
+      "url_patterns": [
+        "https://pixabay.com/"
+      ],
+      "semantic_anchors": {
+        "search_form": "form[action*='search']",
+        "hero": "h1"
+      },
+      "key_elements": {
+        "search_input": {
+          "selector": "input[name='search']",
+          "name": "Search Free Images"
+        },
+        "media_type": {
+          "selector": "select[name='media']",
+          "name": "Media Type Dropdown"
+        }
+      },
+      "summary": "Pixabay home search interface for photos, vectors, and video assets."
+    },
+    "search_results": {
+      "path": "/images/search/<query>/",
+      "url_patterns": [
+        "https://pixabay.com/images/search/*"
+      ],
+      "semantic_anchors": {
+        "results_grid": ".container--2v8vL",
+        "image_cell": "[data-id]"
+      },
+      "key_elements": {
+        "media_cards": {
+          "selector": "[data-id]",
+          "name": "Media Item Cells"
+        },
+        "filter_bar": {
+          "selector": ".filter-bar",
+          "name": "Filter Bar"
+        }
+      },
+      "summary": "Search results displaying thumbnail tiles, resolution indicators, and license info."
+    }
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "site": "dash.cloudflare.com",
+  "description": "Cloudflare dashboard for DNS zone management, Workers & Pages, edge rules, and Zero Trust security",
+  "base_url": "https://dash.cloudflare.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "home": {
+      "path": "/",
+      "url_patterns": [
+        "https://dash.cloudflare.com/*"
+      ],
+      "semantic_anchors": {
+        "domains_list": "[data-testid='zone-list']",
+        "account_switcher": "[data-testid='account-selector']"
+      },
+      "key_elements": {
+        "domain_cards": {
+          "selector": "[data-testid='zone-card']",
+          "name": "Active Domains"
+        },
+        "workers_nav": {
+          "role": "link",
+          "name": "Workers & Pages"
+        }
+      },
+      "summary": "Account overview listing active DNS zones and Edge services."
+    },
+    "dns": {
+      "path": "/<account>/<zone>/dns/records",
+      "url_patterns": [
+        "https://dash.cloudflare.com/*/*/dns/records*"
+      ],
+      "semantic_anchors": {
+        "dns_table": "table[data-testid='dns-records-table']",
+        "add_record": "button:has-text('Add record')"
+      },
+      "key_elements": {
+        "dns_records": {
+          "role": "table",
+          "name": "DNS Records"
+        },
+        "add_record_btn": {
+          "role": "button",
+          "name": "Add record"
+        }
+      },
+      "summary": "DNS records management table for A, CNAME, MX, and TXT entries."
+    }
+  }
+}

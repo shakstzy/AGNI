@@ -1,0 +1,51 @@
+{
+  "site": "openrouter.ai",
+  "description": "OpenRouter unified AI model routing, API keys, balance management, and multi-provider pricing",
+  "base_url": "https://openrouter.ai",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "models": {
+      "path": "/models",
+      "url_patterns": [
+        "https://openrouter.ai/models*"
+      ],
+      "semantic_anchors": {
+        "search_bar": "input[placeholder*='Search']",
+        "model_rows": "tr"
+      },
+      "key_elements": {
+        "search_field": {
+          "role": "searchbox",
+          "name": "Search models"
+        },
+        "model_table": {
+          "role": "table",
+          "name": "Models Table"
+        }
+      },
+      "summary": "Model pricing comparison table with context lengths and provider status."
+    },
+    "keys": {
+      "path": "/keys",
+      "url_patterns": [
+        "https://openrouter.ai/keys*"
+      ],
+      "semantic_anchors": {
+        "create_key_btn": "button:has-text('Create Key')",
+        "credits": "Credits"
+      },
+      "key_elements": {
+        "create_key": {
+          "role": "button",
+          "name": "Create Key"
+        },
+        "credit_balance": {
+          "selector": ".credit-balance",
+          "name": "Account Balance"
+        }
+      },
+      "summary": "OpenRouter API keys, credit limits, and usage analytics."
+    }
+  }
+}

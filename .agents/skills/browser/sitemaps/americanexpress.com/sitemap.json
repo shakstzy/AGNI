@@ -1,0 +1,57 @@
+{
+  "site": "americanexpress.com",
+  "description": "American Express credit card management, statement balances, transactions, and Membership Rewards",
+  "base_url": "https://www.americanexpress.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "login": {
+      "path": "/en-us/account/login",
+      "url_patterns": [
+        "https://www.americanexpress.com/en-us/account/login*"
+      ],
+      "semantic_anchors": {
+        "user_id": "#elButton-username",
+        "password": "#elButton-password",
+        "submit": "#elButton-login"
+      },
+      "key_elements": {
+        "userId_input": {
+          "role": "textbox",
+          "name": "User ID"
+        },
+        "password_input": {
+          "role": "textbox",
+          "name": "Password"
+        },
+        "login_button": {
+          "role": "button",
+          "name": "Log In"
+        }
+      },
+      "summary": "American Express account authentication gateway."
+    },
+    "dashboard": {
+      "path": "/dashboard",
+      "url_patterns": [
+        "https://www.americanexpress.com/en-us/account/dashboard*",
+        "https://global.americanexpress.com/dashboard*"
+      ],
+      "semantic_anchors": {
+        "statement_balance": "[data-qa='statement-balance']",
+        "rewards_balance": "[data-qa='rewards-points']"
+      },
+      "key_elements": {
+        "balance_card": {
+          "role": "region",
+          "name": "Account Balance"
+        },
+        "recent_activity": {
+          "role": "region",
+          "name": "Recent Activity"
+        }
+      },
+      "summary": "Amex online dashboard showing total balance, available credit, and rewards."
+    }
+  }
+}

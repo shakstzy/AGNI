@@ -1,0 +1,121 @@
+{
+  "site": "distrokid.com",
+  "description": "DistroKid digital music distribution portal for releasing tracks, managing catalog, and tracking streaming stores",
+  "base_url": "https://distrokid.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "signin": {
+      "path": "/signin/",
+      "url_patterns": [
+        "https://distrokid.com/signin/*"
+      ],
+      "semantic_anchors": {
+        "google_sso_btn": "button[data-testid='google-sso-sign-in-button']",
+        "header_google_btn": "button[data-testid='header-google-sso-sign-in-button']",
+        "email_input": "input[name='email']",
+        "password_input": "input[name='password']",
+        "submit_btn": "input[type='submit']"
+      },
+      "key_elements": {
+        "google_signin": {
+          "role": "button",
+          "name": "Sign in with Google",
+          "selector": "button[data-testid='google-sso-sign-in-button']"
+        },
+        "email_field": {
+          "role": "textbox",
+          "name": "Email",
+          "selector": "input[name='email']"
+        },
+        "password_field": {
+          "role": "textbox",
+          "name": "Password",
+          "selector": "input[name='password']"
+        }
+      },
+      "summary": "DistroKid sign-in portal with Google OAuth SSO and email login options."
+    },
+    "mymusic": {
+      "path": "/mymusic/",
+      "url_patterns": [
+        "https://distrokid.com/mymusic/*"
+      ],
+      "semantic_anchors": {
+        "release_cards": ".releaseItem, .album-row, a[href*='/mymusic/']",
+        "upload_btn": "a[href*='/new/']",
+        "artist_header": ".artist-name, h1"
+      },
+      "key_elements": {
+        "upload_link": {
+          "role": "link",
+          "name": "Upload",
+          "selector": "a[href*='/new/']"
+        },
+        "releases_container": {
+          "selector": "#your-music, .my-music-grid",
+          "name": "Catalog Releases List"
+        }
+      },
+      "summary": "Dashboard catalog displaying all uploaded releases, release dates, and store status."
+    },
+    "new": {
+      "path": "/new/",
+      "url_patterns": [
+        "https://distrokid.com/new/*"
+      ],
+      "semantic_anchors": {
+        "cookie_banner_deny": ".osano-cm-deny",
+        "upgrade_modal_dismiss": ".upgrade-ultimate-dismissal",
+        "artist_name_input": "input[name='artistName']",
+        "album_title_input": "input[name='albumTitle']",
+        "file_art_input": "input#file_art[type='file']",
+        "track_file_input": "input[name='file_track1']",
+        "track_title_input": "input[name='trackTitle1']",
+        "explicit_radio_no": "input[name='explicit1'][value='no']",
+        "explicit_radio_yes": "input[name='explicit1'][value='yes']",
+        "radio_original_yes": "input[name='radio_original1'][value='yes']",
+        "songwriter_real_first": "input[name='songwriter_real_first_name1']",
+        "songwriter_real_last": "input[name='songwriter_real_last_name1']",
+        "save_and_continue": "#saveAndContinue, #doneButton",
+        "all_mandatory_checkboxes": "input.areyousure[type='checkbox']"
+      },
+      "key_elements": {
+        "cover_art_upload": {
+          "selector": "input#file_art",
+          "name": "Cover Art File (3000x3000px JPG)"
+        },
+        "audio_file_upload": {
+          "selector": "input[name='file_track1']",
+          "name": "Audio File Track 1 (WAV/FLAC)"
+        },
+        "track_title": {
+          "selector": "input[name='trackTitle1']",
+          "name": "Track Title"
+        },
+        "submit_button": {
+          "selector": "#saveAndContinue, #doneButton",
+          "name": "Done / Save and Continue"
+        }
+      },
+      "summary": "Single/Album distribution form: artwork upload, audio ingest, songwriting metadata, and store selection."
+    },
+    "done": {
+      "path": "/new/done/",
+      "url_patterns": [
+        "https://distrokid.com/new/done/*"
+      ],
+      "semantic_anchors": {
+        "confirmation_header": "h1, .done-title",
+        "album_uuid_container": "[data-album-uuid]"
+      },
+      "key_elements": {
+        "success_msg": {
+          "selector": ".upload-success, h1",
+          "name": "Success Confirmation"
+        }
+      },
+      "summary": "Upload completion verification page containing album UUID and ingestion confirmation."
+    }
+  }
+}

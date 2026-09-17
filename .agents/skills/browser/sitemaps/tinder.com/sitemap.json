@@ -1,0 +1,85 @@
+{
+  "site": "tinder.com",
+  "description": "Tinder web dating portal for recommendation browsing, profile discovery, and match conversations",
+  "base_url": "https://tinder.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "recs": {
+      "path": "/app/recs",
+      "url_patterns": [
+        "https://tinder.com/app/recs*"
+      ],
+      "semantic_anchors": {
+        "profile_card": ".recCard",
+        "like_button": "button[aria-label*='Like']",
+        "pass_button": "button[aria-label*='Pass']"
+      },
+      "key_elements": {
+        "like_btn": {
+          "role": "button",
+          "name": "Like"
+        },
+        "pass_btn": {
+          "role": "button",
+          "name": "Pass"
+        },
+        "super_like_btn": {
+          "role": "button",
+          "name": "Super Like"
+        },
+        "profile_info": {
+          "selector": ".recCard__info",
+          "name": "Candidate Info"
+        }
+      },
+      "summary": "Dating recommendations card stack with photos, bio, distance, and interests."
+    },
+    "messages": {
+      "path": "/app/messages",
+      "url_patterns": [
+        "https://tinder.com/app/messages*"
+      ],
+      "semantic_anchors": {
+        "matches_list": "#match-list",
+        "chat_pane": ".chatContent"
+      },
+      "key_elements": {
+        "match_queue": {
+          "selector": ".matchList",
+          "name": "New Matches Queue"
+        },
+        "chat_threads": {
+          "selector": ".messageList",
+          "name": "Active Chat Threads"
+        },
+        "chat_input": {
+          "role": "textbox",
+          "name": "Type a message"
+        }
+      },
+      "summary": "Active conversation threads and new matches list."
+    },
+    "profile": {
+      "path": "/app/profile",
+      "url_patterns": [
+        "https://tinder.com/app/profile*"
+      ],
+      "semantic_anchors": {
+        "edit_info": "a:has-text('Edit info')",
+        "settings_btn": "a:has-text('Settings')"
+      },
+      "key_elements": {
+        "edit_info_btn": {
+          "role": "link",
+          "name": "Edit Info"
+        },
+        "settings_link": {
+          "role": "link",
+          "name": "Settings"
+        }
+      },
+      "summary": "User personal profile overview, photos, and subscription management."
+    }
+  }
+}

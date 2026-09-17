@@ -1,0 +1,31 @@
+{
+  "site": "kalodata.com",
+  "description": "Kalodata TikTok Shop analytics, trending products, top creators, livestream revenue, and store metrics",
+  "base_url": "https://kalodata.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "rankings": {
+      "path": "/product",
+      "url_patterns": [
+        "https://kalodata.com/product*",
+        "https://kalodata.com/shop*"
+      ],
+      "semantic_anchors": {
+        "data_table": ".ant-table-tbody",
+        "category_filter": ".category-filter"
+      },
+      "key_elements": {
+        "ranking_rows": {
+          "selector": ".ant-table-row",
+          "name": "Product Ranking Rows"
+        },
+        "revenue_metric": {
+          "selector": ".revenue-cell",
+          "name": "Estimated Revenue"
+        }
+      },
+      "summary": "TikTok Shop trending product lists, GMV estimates, and creator sales volume."
+    }
+  }
+}

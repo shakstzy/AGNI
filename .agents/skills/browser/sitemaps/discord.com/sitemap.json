@@ -1,0 +1,30 @@
+{
+  "site": "discord.com",
+  "description": "Discord web application for server text channels, direct messages, and community alerts",
+  "base_url": "https://discord.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "channel": {
+      "path": "/channels/@me",
+      "url_patterns": [
+        "https://discord.com/channels/*"
+      ],
+      "semantic_anchors": {
+        "chat_input": "div[role='textbox']",
+        "message_list": "ol[data-list-id='chat-messages']"
+      },
+      "key_elements": {
+        "message_stream": {
+          "role": "log",
+          "name": "Messages"
+        },
+        "text_input": {
+          "role": "textbox",
+          "name": "Message #channel"
+        }
+      },
+      "summary": "Discord text chat feed, user list, and message composer."
+    }
+  }
+}

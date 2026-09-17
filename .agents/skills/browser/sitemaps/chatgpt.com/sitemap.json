@@ -1,0 +1,60 @@
+{
+  "site": "chatgpt.com",
+  "description": "OpenAI ChatGPT conversational interface, GPT-4o / o1 reasoning, and custom GPTs",
+  "base_url": "https://chatgpt.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "chat": {
+      "path": "/",
+      "url_patterns": [
+        "https://chatgpt.com/*"
+      ],
+      "semantic_anchors": {
+        "prompt_textarea": "#prompt-textarea",
+        "model_selector": "button[data-testid*='model-switcher']",
+        "send_button": "button[data-testid='send-button']"
+      },
+      "key_elements": {
+        "prompt_input": {
+          "selector": "#prompt-textarea",
+          "role": "textbox"
+        },
+        "model_picker": {
+          "role": "button",
+          "name": "Model Switcher"
+        },
+        "send_button": {
+          "selector": "button[data-testid='send-button']",
+          "role": "button"
+        },
+        "sidebar_history": {
+          "selector": "nav[aria-label='Chat history']",
+          "role": "navigation"
+        }
+      },
+      "summary": "ChatGPT conversational interface and active conversation history."
+    },
+    "gpts": {
+      "path": "/gpts",
+      "url_patterns": [
+        "https://chatgpt.com/gpts*"
+      ],
+      "semantic_anchors": {
+        "explore_gpts": "h1:has-text('Explore GPTs')",
+        "gpt_cards": "[data-testid*='gpt-card']"
+      },
+      "key_elements": {
+        "search_gpts": {
+          "role": "searchbox",
+          "name": "Search Public GPTs"
+        },
+        "my_gpts_tab": {
+          "role": "tab",
+          "name": "My GPTs"
+        }
+      },
+      "summary": "Custom GPT store, creator tools, and workspace GPT catalog."
+    }
+  }
+}

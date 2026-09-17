@@ -1,0 +1,51 @@
+{
+  "site": "photos.google.com",
+  "description": "Google Photos media library, search, albums, and video downloads",
+  "base_url": "https://photos.google.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "library": {
+      "path": "/",
+      "url_patterns": ["https://photos.google.com/", "https://photos.google.com/u/*"],
+      "semantic_anchors": {
+        "search_bar": "Search your photos",
+        "photos_grid": "Main photos timeline"
+      },
+      "key_elements": {
+        "search_input": {
+          "role": "combobox",
+          "name": "Search your photos"
+        },
+        "navigation_drawer": {
+          "role": "navigation",
+          "name": "Navigation"
+        }
+      }
+    },
+    "videos": {
+      "path": "/search/_m8_Videos",
+      "url_patterns": ["https://photos.google.com/search/_m8_Videos*", "https://photos.google.com/search/videos*"],
+      "semantic_anchors": {
+        "video_items": "Video tiles with duration badges"
+      },
+      "key_elements": {
+        "first_video": {
+          "role": "checkbox",
+          "name": "Video item"
+        }
+      }
+    },
+    "viewer": {
+      "path": "/photo/*",
+      "url_patterns": ["https://photos.google.com/photo/*"],
+      "semantic_anchors": {
+        "more_options": "More options",
+        "download_button": "Download"
+      },
+      "shortcuts": {
+        "download": "Shift+D"
+      }
+    }
+  }
+}

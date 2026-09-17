@@ -1,0 +1,51 @@
+{
+  "site": "console.cloud.google.com",
+  "description": "Google Cloud Platform console for IAM, Compute Engine, Cloud Run, Storage, and Billing",
+  "base_url": "https://console.cloud.google.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "dashboard": {
+      "path": "/home/dashboard",
+      "url_patterns": [
+        "https://console.cloud.google.com/home/dashboard*"
+      ],
+      "semantic_anchors": {
+        "project_picker": "[data-testid='cfc-project-switcher']",
+        "nav_menu": "button[aria-label='Navigation menu']"
+      },
+      "key_elements": {
+        "project_selector": {
+          "role": "button",
+          "name": "Project picker"
+        },
+        "billing_card": {
+          "selector": ".p6n-billing-card",
+          "name": "Billing Card"
+        }
+      },
+      "summary": "Project dashboard showing compute resources, API metrics, and billing estimates."
+    },
+    "credentials": {
+      "path": "/apis/credentials",
+      "url_patterns": [
+        "https://console.cloud.google.com/apis/credentials*"
+      ],
+      "semantic_anchors": {
+        "create_cred": "Create Credentials",
+        "cred_table": "table.p6n-table"
+      },
+      "key_elements": {
+        "api_keys_table": {
+          "role": "table",
+          "name": "API Keys"
+        },
+        "oauth_clients": {
+          "role": "table",
+          "name": "OAuth 2.0 Client IDs"
+        }
+      },
+      "summary": "API credentials, OAuth client consent, and service account keys."
+    }
+  }
+}

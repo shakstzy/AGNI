@@ -1,0 +1,30 @@
+{
+  "site": "substack.com",
+  "description": "Substack newsletter publishing platform, reader inbox, subscriber analytics, and publication posts",
+  "base_url": "https://substack.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "inbox": {
+      "path": "/inbox",
+      "url_patterns": [
+        "https://substack.com/inbox*"
+      ],
+      "semantic_anchors": {
+        "inbox_feed": ".inbox-list",
+        "nav": "nav.top-nav"
+      },
+      "key_elements": {
+        "newsletter_posts": {
+          "selector": ".post-preview",
+          "name": "Newsletter Posts"
+        },
+        "publication_menu": {
+          "selector": ".user-menu",
+          "name": "Account Menu"
+        }
+      },
+      "summary": "Substack reader inbox showing subscribed newsletter issues."
+    }
+  }
+}

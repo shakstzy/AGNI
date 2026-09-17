@@ -1,0 +1,30 @@
+{
+  "site": "app.clay.com",
+  "description": "Clay data enrichment platform combining multiple providers for automated outbound CRM workflows",
+  "base_url": "https://app.clay.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "workspaces": {
+      "path": "/workspaces",
+      "url_patterns": [
+        "https://app.clay.com/workspaces*"
+      ],
+      "semantic_anchors": {
+        "workspace_heading": "Workspaces",
+        "table_list": ".clay-table-list"
+      },
+      "key_elements": {
+        "workspace_list": {
+          "role": "list",
+          "name": "Workspace Folders"
+        },
+        "new_table_btn": {
+          "role": "button",
+          "name": "New Table"
+        }
+      },
+      "summary": "Clay workspace catalog containing enrichment tables, automations, and sources."
+    }
+  }
+}

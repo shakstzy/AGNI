@@ -1,0 +1,47 @@
+{
+  "site": "youtube.com",
+  "description": "YouTube video platform for searching video essays, channel inspection, and Shorts monitoring",
+  "base_url": "https://www.youtube.com",
+  "login_required": false,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "home": {
+      "path": "/",
+      "url_patterns": [
+        "https://www.youtube.com/"
+      ],
+      "semantic_anchors": {
+        "search_input": "input#search",
+        "video_grid": "#contents.ytd-rich-grid-renderer"
+      },
+      "key_elements": {
+        "search_box": {
+          "role": "searchbox",
+          "name": "Search"
+        },
+        "video_cards": {
+          "selector": "ytd-rich-item-renderer",
+          "name": "Video Cards"
+        }
+      },
+      "summary": "YouTube video recommendations grid."
+    },
+    "channel_shorts": {
+      "path": "/@<handle>/shorts",
+      "url_patterns": [
+        "https://www.youtube.com/@*/shorts*"
+      ],
+      "semantic_anchors": {
+        "shorts_grid": "#contents.ytd-rich-grid-renderer",
+        "channel_header": "#channel-header"
+      },
+      "key_elements": {
+        "shorts_lockup": {
+          "selector": "ytd-rich-item-renderer",
+          "name": "Shorts Lockups"
+        }
+      },
+      "summary": "Creator Shorts grid showing vertical thumbnails and view counts."
+    }
+  }
+}

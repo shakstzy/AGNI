@@ -1,0 +1,9 @@
+{
+  "site": "app.alpaca.markets",
+  "name": "Alpaca Trading Dashboard",
+  "login_url": "https://app.alpaca.markets/login",
+  "routes": {
+    "dashboard": "https://app.alpaca.markets/",
+    "api_keys": "https://app.alpaca.markets/account/api-keys"
+  }
+}

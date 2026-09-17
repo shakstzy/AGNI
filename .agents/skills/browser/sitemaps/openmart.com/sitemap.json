@@ -1,0 +1,48 @@
+{
+  "site": "openmart.com",
+  "description": "Openmart AI SMB search portal, marketing pages, pricing, and app authentication redirect",
+  "base_url": "https://www.openmart.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "landing": {
+      "path": "/",
+      "url_patterns": [
+        "https://www.openmart.com/*",
+        "https://openmart.com/*"
+      ],
+      "semantic_anchors": {
+        "signin_button": "a:has-text('Sign in')",
+        "start_free": "a:has-text('Get Started')"
+      },
+      "key_elements": {
+        "signin_link": {
+          "role": "link",
+          "name": "Sign in"
+        },
+        "hero_cta": {
+          "role": "link",
+          "name": "Get Started"
+        }
+      },
+      "summary": "Public homepage with navigation to pricing, feature overviews, and login redirection to app.openmart.com."
+    },
+    "pricing": {
+      "path": "/pricing",
+      "url_patterns": [
+        "https://www.openmart.com/pricing*"
+      ],
+      "semantic_anchors": {
+        "pricing_cards": ".pricing-card",
+        "tier_cta": "button:has-text('Choose Plan')"
+      },
+      "key_elements": {
+        "pricing_tiers": {
+          "selector": ".pricing-grid",
+          "name": "Subscription Plans"
+        }
+      },
+      "summary": "Subscription tier breakdown, monthly credit allocations, and SMB search features."
+    }
+  }
+}

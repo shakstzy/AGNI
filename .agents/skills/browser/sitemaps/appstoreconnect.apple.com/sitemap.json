@@ -1,0 +1,26 @@
+{
+  "site": "appstoreconnect.apple.com",
+  "description": "Apple App Store Connect developer portal for TestFlight, apps, and API key management",
+  "base_url": "https://appstoreconnect.apple.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "apps": {
+      "path": "/apps",
+      "url_patterns": ["https://appstoreconnect.apple.com/apps*"],
+      "semantic_anchors": {
+        "title": "Apps"
+      },
+      "key_elements": {
+        "apps_header": {
+          "role": "heading",
+          "name": "Apps"
+        },
+        "add_app_button": {
+          "role": "button",
+          "name": "Add App"
+        }
+      }
+    }
+  }
+}

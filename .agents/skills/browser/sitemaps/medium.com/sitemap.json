@@ -1,0 +1,30 @@
+{
+  "site": "medium.com",
+  "description": "Medium publishing platform for reading technical articles, author stats, and publishing drafts",
+  "base_url": "https://medium.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "home": {
+      "path": "/",
+      "url_patterns": [
+        "https://medium.com/*"
+      ],
+      "semantic_anchors": {
+        "feed": "main article",
+        "search": "input[aria-label='search']"
+      },
+      "key_elements": {
+        "article_cards": {
+          "selector": "article",
+          "name": "Article Cards"
+        },
+        "profile_menu": {
+          "selector": "[data-testid='headerProfileIcon']",
+          "name": "Profile Menu"
+        }
+      },
+      "summary": "Medium reading homepage and curated recommendations."
+    }
+  }
+}

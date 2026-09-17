@@ -1,0 +1,52 @@
+{
+  "site": "reddit.com",
+  "description": "Reddit community discussions, subreddit sentiment, topic research, and post drafting",
+  "base_url": "https://www.reddit.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "feeds": {
+      "path": "/",
+      "url_patterns": [
+        "https://www.reddit.com/",
+        "https://www.reddit.com/r/*"
+      ],
+      "semantic_anchors": {
+        "feed_stream": "shreddit-feed",
+        "search_bar": "#search-input"
+      },
+      "key_elements": {
+        "post_items": {
+          "selector": "shreddit-post",
+          "name": "Reddit Posts"
+        },
+        "search_box": {
+          "role": "combobox",
+          "name": "Search Reddit"
+        }
+      },
+      "summary": "Subreddit feed and post timeline with upvotes, comment counts, and flairs."
+    },
+    "thread": {
+      "path": "/comments/<id>/...",
+      "url_patterns": [
+        "https://www.reddit.com/r/*/comments/*"
+      ],
+      "semantic_anchors": {
+        "post_content": "[data-test-id='post-content']",
+        "comment_tree": "shreddit-comment-tree"
+      },
+      "key_elements": {
+        "post_body": {
+          "selector": "[data-test-id='post-content']",
+          "name": "Post Body"
+        },
+        "comments": {
+          "selector": "shreddit-comment",
+          "name": "Comments"
+        }
+      },
+      "summary": "Individual post discussion thread with nested comments and author badges."
+    }
+  }
+}

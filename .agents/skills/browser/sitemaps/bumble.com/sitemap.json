@@ -1,0 +1,34 @@
+{
+  "site": "bumble.com",
+  "description": "Bumble web dating portal for Beeline admirers, match queue, conversation replies, and profiles",
+  "base_url": "https://bumble.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "app": {
+      "path": "/app",
+      "url_patterns": [
+        "https://bumble.com/app*"
+      ],
+      "semantic_anchors": {
+        "swipe_card": ".encounters-story",
+        "sidebar": ".sidebar"
+      },
+      "key_elements": {
+        "pass_btn": {
+          "role": "button",
+          "name": "Pass"
+        },
+        "like_btn": {
+          "role": "button",
+          "name": "Like"
+        },
+        "match_queue": {
+          "selector": ".match-queue",
+          "name": "Match Queue"
+        }
+      },
+      "summary": "Bumble encounters swipe deck and matches sidebar."
+    }
+  }
+}

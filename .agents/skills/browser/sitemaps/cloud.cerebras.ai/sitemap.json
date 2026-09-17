@@ -1,0 +1,30 @@
+{
+  "site": "cloud.cerebras.ai",
+  "description": "Cerebras Cloud ultra-fast wafer-scale inference engine, playground, and API key management",
+  "base_url": "https://cloud.cerebras.ai",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "platform": {
+      "path": "/platform",
+      "url_patterns": [
+        "https://cloud.cerebras.ai/platform*"
+      ],
+      "semantic_anchors": {
+        "api_keys": "API Keys",
+        "playground": "Playground"
+      },
+      "key_elements": {
+        "keys_nav": {
+          "role": "link",
+          "name": "API Keys"
+        },
+        "usage_stats": {
+          "selector": ".usage-container",
+          "name": "Usage Metrics"
+        }
+      },
+      "summary": "Cerebras Cloud console showing tokens/sec throughput and API credentials."
+    }
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "site": "console.groq.com",
+  "description": "Groq LPU developer console, playground, API keys, rate limits, and token performance logs",
+  "base_url": "https://console.groq.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "playground": {
+      "path": "/playground",
+      "url_patterns": [
+        "https://console.groq.com/playground*"
+      ],
+      "semantic_anchors": {
+        "model_dropdown": "button[id*='model-select']",
+        "system_prompt": "textarea[placeholder*='System']"
+      },
+      "key_elements": {
+        "model_select": {
+          "role": "combobox",
+          "name": "Select Model"
+        },
+        "user_input": {
+          "role": "textbox",
+          "name": "User prompt"
+        }
+      },
+      "summary": "Groq LPU real-time inference playground with latency benchmarks."
+    },
+    "keys": {
+      "path": "/keys",
+      "url_patterns": [
+        "https://console.groq.com/keys*"
+      ],
+      "semantic_anchors": {
+        "create_key": "button:has-text('Create API Key')",
+        "keys_table": "table"
+      },
+      "key_elements": {
+        "create_btn": {
+          "role": "button",
+          "name": "Create API Key"
+        },
+        "key_table": {
+          "role": "table",
+          "name": "API Keys Table"
+        }
+      },
+      "summary": "Manage Groq API keys and rate limits."
+    }
+  }
+}

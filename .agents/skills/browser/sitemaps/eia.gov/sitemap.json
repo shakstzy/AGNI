@@ -1,0 +1,54 @@
+{
+  "site": "eia.gov",
+  "description": "U.S. Energy Information Administration Open Data API, wholesale electricity pricing, grid additions, and energy infrastructure telemetry",
+  "base_url": "https://www.eia.gov",
+  "login_required": false,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "register": {
+      "path": "/opendata/register.php",
+      "url_patterns": [
+        "https://www.eia.gov/opendata/register.php*"
+      ],
+      "semantic_anchors": {
+        "first_name": "#firstName",
+        "last_name": "#lastName",
+        "email": "#email",
+        "tos": "#tos",
+        "register_button": "input[name='Register']"
+      },
+      "key_elements": {
+        "email_field": {
+          "selector": "#email",
+          "name": "Email Address"
+        },
+        "terms_checkbox": {
+          "selector": "#tos",
+          "name": "Terms of Service"
+        },
+        "submit_btn": {
+          "selector": "input[name='Register']",
+          "name": "Register"
+        }
+      },
+      "summary": "EIA API Key registration portal for free access to energy telemetry datasets."
+    },
+    "developer": {
+      "path": "/developer",
+      "url_patterns": [
+        "https://www.eia.gov/developer*"
+      ],
+      "semantic_anchors": {
+        "api_v2_docs": "API Documentation",
+        "data_browser": "Data Browser"
+      },
+      "key_elements": {
+        "docs_link": {
+          "role": "link",
+          "name": "API Documentation"
+        }
+      },
+      "summary": "EIA developer portal with v2 documentation, data paths, and interactive queries."
+    }
+  }
+}

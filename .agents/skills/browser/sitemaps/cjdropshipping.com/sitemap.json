@@ -1,0 +1,51 @@
+{
+  "site": "cjdropshipping.com",
+  "description": "CJ Dropshipping portal for supplier sourcing, product mapping, and store synchronization",
+  "base_url": "https://cjdropshipping.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "my_cj": {
+      "path": "/my-cj.html",
+      "url_patterns": [
+        "https://cjdropshipping.com/my-cj*"
+      ],
+      "semantic_anchors": {
+        "user_center": ".user-name",
+        "store_auth": "Store Authorization"
+      },
+      "key_elements": {
+        "nav_menu": {
+          "role": "navigation",
+          "name": "My CJ Menu"
+        },
+        "auth_status": {
+          "selector": ".store-auth-list",
+          "name": "Authorization list"
+        }
+      },
+      "summary": "CJ Dropshipping account control panel and store connection dashboard."
+    },
+    "product_search": {
+      "path": "/list/search.html",
+      "url_patterns": [
+        "https://cjdropshipping.com/list/search*"
+      ],
+      "semantic_anchors": {
+        "search_input": "#search-key",
+        "product_cards": ".product-item"
+      },
+      "key_elements": {
+        "search_field": {
+          "role": "searchbox",
+          "name": "Search products"
+        },
+        "product_grid": {
+          "selector": ".product-list",
+          "name": "Product Grid"
+        }
+      },
+      "summary": "Sourcing catalog with warehouse filters, prices, and shipping calculators."
+    }
+  }
+}

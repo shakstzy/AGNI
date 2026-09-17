@@ -1,0 +1,51 @@
+{
+  "site": "zillow.com",
+  "description": "Zillow Rental Manager for landlord listings, tenant applications, leads, and lease messaging",
+  "base_url": "https://www.zillow.com/rental-manager",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "inbox": {
+      "path": "/rental-manager/inbox",
+      "url_patterns": [
+        "https://www.zillow.com/rental-manager/inbox*"
+      ],
+      "semantic_anchors": {
+        "inbox_heading": "Messages",
+        "conversations": "[data-testid='conversation-item']"
+      },
+      "key_elements": {
+        "conversation_list": {
+          "selector": "[data-testid='conversation-list']",
+          "role": "list"
+        },
+        "message_body": {
+          "selector": "[data-testid='message-thread']",
+          "name": "Message Thread"
+        }
+      },
+      "summary": "Prospective tenant messaging inbox and tour request center."
+    },
+    "properties": {
+      "path": "/rental-manager/properties",
+      "url_patterns": [
+        "https://www.zillow.com/rental-manager/properties*"
+      ],
+      "semantic_anchors": {
+        "property_cards": "[data-testid='property-card']",
+        "add_property": "Add a property"
+      },
+      "key_elements": {
+        "property_list": {
+          "selector": "[data-testid='property-grid']",
+          "name": "Rental Listings"
+        },
+        "active_status": {
+          "selector": ".status-badge",
+          "name": "Listing Status"
+        }
+      },
+      "summary": "Rental properties dashboard with vacancy status and listing links."
+    }
+  }
+}

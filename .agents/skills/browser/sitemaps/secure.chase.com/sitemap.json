@@ -1,0 +1,56 @@
+{
+  "site": "secure.chase.com",
+  "description": "Chase consumer and business banking, credit cards, account balances, and transaction history",
+  "base_url": "https://secure.chase.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "logon": {
+      "path": "/web/auth/#/logon/logon/chaseOnline",
+      "url_patterns": [
+        "https://secure.chase.com/web/auth/#/logon/logon/chaseOnline*"
+      ],
+      "semantic_anchors": {
+        "userId": "#userId-text-input-field",
+        "password": "#password-text-input-field",
+        "signin": "#signin-button"
+      },
+      "key_elements": {
+        "userId_input": {
+          "role": "textbox",
+          "name": "Username"
+        },
+        "password_input": {
+          "role": "textbox",
+          "name": "Password"
+        },
+        "signin_button": {
+          "role": "button",
+          "name": "Sign in"
+        }
+      },
+      "summary": "Chase online banking authentication gateway."
+    },
+    "dashboard": {
+      "path": "/web/auth/#/dashboard/overview",
+      "url_patterns": [
+        "https://secure.chase.com/web/auth/#/dashboard*"
+      ],
+      "semantic_anchors": {
+        "accounts_summary": "[data-qa='account-tiles-container']",
+        "pay_transfer": "[data-qa='pay-transfer-header-btn']"
+      },
+      "key_elements": {
+        "accounts_grid": {
+          "role": "region",
+          "name": "Accounts"
+        },
+        "statements_link": {
+          "role": "link",
+          "name": "Statements"
+        }
+      },
+      "summary": "Chase accounts overview with deposit accounts, credit cards, and balances."
+    }
+  }
+}

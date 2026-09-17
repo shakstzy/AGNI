@@ -1,0 +1,55 @@
+{
+  "site": "supabase.com",
+  "description": "Supabase cloud console for project management, PostgreSQL database, authentication, and storage",
+  "base_url": "https://supabase.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "dashboard": {
+      "path": "/dashboard/projects",
+      "url_patterns": [
+        "https://supabase.com/dashboard/projects*"
+      ],
+      "semantic_anchors": {
+        "project_cards": "[data-testid='project-card']",
+        "org_selector": "[data-testid='org-dropdown']"
+      },
+      "key_elements": {
+        "project_list": {
+          "selector": ".project-list",
+          "name": "Projects List"
+        },
+        "new_project_btn": {
+          "role": "button",
+          "name": "New project"
+        }
+      },
+      "summary": "Supabase organizations and project list overview."
+    },
+    "project_overview": {
+      "path": "/dashboard/project/*/editor",
+      "url_patterns": [
+        "https://supabase.com/dashboard/project/*"
+      ],
+      "semantic_anchors": {
+        "sidebar": "nav.sidebar",
+        "table_editor": "Table Editor"
+      },
+      "key_elements": {
+        "table_nav": {
+          "role": "link",
+          "name": "Table Editor"
+        },
+        "sql_nav": {
+          "role": "link",
+          "name": "SQL Editor"
+        },
+        "settings_nav": {
+          "role": "link",
+          "name": "Project Settings"
+        }
+      },
+      "summary": "Project database manager, SQL runner, and API keys panel."
+    }
+  }
+}

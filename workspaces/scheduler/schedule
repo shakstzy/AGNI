@@ -1,0 +1,128 @@
+#!/usr/bin/env python3
+"""schedule — AGNI scheduler workspace CLI.
+
+Manages recurring jobs in jobs.json and syncs them to the user crontab under
+`# agni:<name>` markers (leaves all other entries untouched).
+
+    schedule list
+    schedule add <name> --cron "<cron>" --cmd "<shell command>"
+    schedule run <name>
+    schedule remove <name>
+    schedule install          # write manifest jobs into crontab
+    schedule uninstall        # remove all agni-managed cron lines
+"""
+
+import argparse
+import json
+import os
+import subprocess
+import sys
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+JOBS = HERE / "jobs.json"
+LOGS = HERE / "logs"
+TAG = "# agni:"
+
+
+def load() -> dict:
+    if JOBS.exists():
+        return json.loads(JOBS.read_text())
+    return {}
+
+
+def save(jobs: dict) -> None:
+    JOBS.write_text(json.dumps(jobs, indent=2) + "\n")
+
+
+def cron_lines(jobs: dict) -> list[str]:
+    lines = []
+    for name, job in jobs.items():
+        log = LOGS / f"{name}.log"
+        lines.append(f'{job["cron"]} {job["cmd"]} >> "{log}" 2>&1 {TAG}{name}')
+    return lines
+
+
+def read_crontab() -> list[str]:
+    proc = subprocess.run(["crontab", "-l"], capture_output=True, text=True)
+    if proc.returncode != 0:
+        return []
+    return proc.stdout.splitlines()
+
+
+def cmd_list() -> int:
+    jobs = load()
+    if not jobs:
+        print("no jobs — add one with: schedule add <name> --cron '<cron>' --cmd '<cmd>'")
+        return 0
+    for name, job in jobs.items():
+        print(f"{name:20} {job['cron']:20} {job['cmd']}")
+    return 0
+
+
+def cmd_add(args) -> int:
+    jobs = load()
+    jobs[args.name] = {"cron": args.cron, "cmd": args.command}
+    save(jobs)
+    print(f"added {args.name}: {args.cron} {args.command} — run `schedule install` to activate")
+    return 0
+
+
+def cmd_remove(args) -> int:
+    jobs = load()
+    if args.name not in jobs:
+        print(f"no such job: {args.name}")
+        return 1
+    del jobs[args.name]
+    save(jobs)
+    print(f"removed {args.name} — run `schedule install` to sync crontab")
+    return 0
+
+
+def cmd_run(args) -> int:
+    jobs = load()
+    job = jobs.get(args.name)
+    if not job:
+        print(f"no such job: {args.name}")
+        return 1
+    LOGS.mkdir(exist_ok=True)
+    with open(LOGS / f"{args.name}.log", "a") as log:
+        proc = subprocess.run(job["cmd"], shell=True, stdout=log,
+                              stderr=subprocess.STDOUT)
+    print(f"exit {proc.returncode} — log: {LOGS / f'{args.name}.log'}")
+    return proc.returncode
+
+
+def sync_crontab(remove_only: bool) -> int:
+    existing = [l for l in read_crontab() if TAG not in l]
+    new = [] if remove_only else cron_lines(load())
+    text = "\n".join(existing + new)
+    proc = subprocess.run(["crontab", "-"], input=text + ("\n" if text else ""),
+                          text=True, capture_output=True)
+    if proc.returncode != 0:
+        print(proc.stderr)
+        return 1
+    print(f"crontab synced: {len(new)} agni job(s), {len(existing)} untouched lines")
+    return 0
+
+
+def main() -> int:
+    p = argparse.ArgumentParser(prog="schedule")
+    sub = p.add_subparsers(dest="cmd", required=True)
+    sub.add_parser("list")
+    a = sub.add_parser("add"); a.add_argument("name"); a.add_argument("--cron", required=True); a.add_argument("--cmd", dest="command", required=True)
+    r = sub.add_parser("run"); r.add_argument("name")
+    d = sub.add_parser("remove"); d.add_argument("name")
+    sub.add_parser("install")
+    sub.add_parser("uninstall")
+    args = p.parse_args()
+    return {"list": lambda: cmd_list(),
+            "add": lambda: cmd_add(args),
+            "remove": lambda: cmd_remove(args),
+            "run": lambda: cmd_run(args),
+            "install": lambda: sync_crontab(False),
+            "uninstall": lambda: sync_crontab(True)}[args.cmd]()
+
+
+if __name__ == "__main__":
+    sys.exit(main())

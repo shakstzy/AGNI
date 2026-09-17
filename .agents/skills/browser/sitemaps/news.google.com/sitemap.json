@@ -1,0 +1,51 @@
+{
+  "site": "news.google.com",
+  "description": "Google News aggregator for top headlines, industry coverage, and real-time event monitoring",
+  "base_url": "https://news.google.com",
+  "login_required": false,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "home": {
+      "path": "/home",
+      "url_patterns": [
+        "https://news.google.com/home*"
+      ],
+      "semantic_anchors": {
+        "main_feed": "[data-n-et='1000']",
+        "search_box": "input[aria-label='Search']"
+      },
+      "key_elements": {
+        "news_articles": {
+          "selector": "article",
+          "name": "Top News Articles"
+        },
+        "source_publisher": {
+          "selector": "[data-n-tid]",
+          "name": "Publisher Name"
+        }
+      },
+      "summary": "Main news stream showing top national and global headlines with publisher attribution."
+    },
+    "search": {
+      "path": "/search?q=<query>",
+      "url_patterns": [
+        "https://news.google.com/search*"
+      ],
+      "semantic_anchors": {
+        "search_results": "main article",
+        "time_stamp": "time"
+      },
+      "key_elements": {
+        "result_articles": {
+          "selector": "article",
+          "name": "Search Result Articles"
+        },
+        "pub_time": {
+          "selector": "time",
+          "name": "Publication Timestamp"
+        }
+      },
+      "summary": "Filtered news article search results with chronological ordering."
+    }
+  }
+}

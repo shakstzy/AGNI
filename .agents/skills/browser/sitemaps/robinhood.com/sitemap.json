@@ -1,0 +1,68 @@
+{
+  "site": "robinhood.com",
+  "description": "Robinhood brokerage portfolio, stock and crypto holdings, buying power, and order tracking",
+  "base_url": "https://robinhood.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "login": {
+      "path": "/login",
+      "url_patterns": [
+        "https://robinhood.com/login*"
+      ],
+      "semantic_anchors": {
+        "username": "input[name='username']",
+        "password": "input[name='password']",
+        "submit": "button[type='submit']"
+      },
+      "key_elements": {
+        "username_field": {
+          "role": "textbox",
+          "name": "Email or Username"
+        },
+        "password_field": {
+          "role": "textbox",
+          "name": "Password"
+        }
+      },
+      "summary": "Robinhood user login gateway."
+    },
+    "portfolio": {
+      "path": "/",
+      "url_patterns": [
+        "https://robinhood.com/"
+      ],
+      "semantic_anchors": {
+        "portfolio_value": "[data-testid='portfolio-value']",
+        "watchlist": "[data-testid='watchlist']"
+      },
+      "key_elements": {
+        "chart_container": {
+          "role": "region",
+          "name": "Portfolio Chart"
+        },
+        "buying_power": {
+          "role": "text",
+          "name": "Buying Power"
+        }
+      },
+      "summary": "Main investing overview showing account equity, chart performance, and watchlists."
+    },
+    "crypto": {
+      "path": "/crypto",
+      "url_patterns": [
+        "https://robinhood.com/crypto*"
+      ],
+      "semantic_anchors": {
+        "crypto_holdings": "[data-testid='crypto-holdings']"
+      },
+      "key_elements": {
+        "crypto_list": {
+          "role": "table",
+          "name": "Cryptocurrencies"
+        }
+      },
+      "summary": "Crypto assets portfolio and trading overview."
+    }
+  }
+}

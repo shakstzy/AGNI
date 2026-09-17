@@ -1,0 +1,122 @@
+{
+  "site": "app.mercury.com",
+  "description": "Mercury startup business banking, checking, treasury accounts, and virtual corporate debit cards",
+  "base_url": "https://app.mercury.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "login": {
+      "path": "/login",
+      "url_patterns": [
+        "https://app.mercury.com/login*"
+      ],
+      "semantic_anchors": {
+        "email": "input[name='email']",
+        "password": "input[name='password']",
+        "submit": "button[type='submit']"
+      },
+      "key_elements": {
+        "email_field": {
+          "role": "textbox",
+          "name": "Email"
+        },
+        "password_field": {
+          "role": "textbox",
+          "name": "Password"
+        },
+        "submit_button": {
+          "role": "button",
+          "name": "Log In"
+        }
+      },
+      "summary": "Mercury business login screen."
+    },
+    "dashboard": {
+      "path": "/dashboard",
+      "url_patterns": [
+        "https://app.mercury.com/dashboard*"
+      ],
+      "semantic_anchors": {
+        "total_cash": "[data-testid='total-cash']",
+        "accounts_nav": "[data-testid='nav-accounts']"
+      },
+      "key_elements": {
+        "accounts_summary": {
+          "role": "region",
+          "name": "Accounts"
+        },
+        "move_money_btn": {
+          "role": "button",
+          "name": "Move Money"
+        }
+      },
+      "summary": "Mercury business cash overview and treasury balance."
+    },
+    "cards": {
+      "path": "/cards",
+      "url_patterns": [
+        "https://app.mercury.com/cards*"
+      ],
+      "semantic_anchors": {
+        "cards_table": "[data-testid='cards-table']",
+        "new_card_btn": "a[href*='/issue-card'], button:has-text('Create card')"
+      },
+      "key_elements": {
+        "cards_list": {
+          "role": "table",
+          "name": "Cards Table"
+        },
+        "create_card_btn": {
+          "role": "button",
+          "name": "Create card"
+        },
+        "card_rows": {
+          "selector": ".card-row",
+          "name": "Issued Cards"
+        }
+      },
+      "actions": [
+        "open-card-creation",
+        "freeze-card"
+      ],
+      "summary": "Corporate credit and debit cards overview listing virtual and physical cards."
+    },
+    "issue-card": {
+      "path": "/issue-card",
+      "url_patterns": [
+        "https://app.mercury.com/issue-card*"
+      ],
+      "semantic_anchors": {
+        "form_heading": "h1:has-text('Create a card')",
+        "card_type_radio": "[role='radiogroup']",
+        "nickname_input": "input[name='nickname'], input[placeholder*='nickname' i]",
+        "limit_type_select": "select[name='limitType'], button[name='limitType']",
+        "limit_amount_input": "input[name='limitAmount'], input[placeholder*='0.00']",
+        "submit_create_btn": "button:has-text('Create card')"
+      },
+      "key_elements": {
+        "virtual_radio": {
+          "role": "radio",
+          "name": "Virtual"
+        },
+        "card_nickname": {
+          "role": "textbox",
+          "name": "Card nickname"
+        },
+        "limit_amount": {
+          "role": "textbox",
+          "name": "Spending limit amount"
+        },
+        "create_card_submit": {
+          "role": "button",
+          "name": "Create card"
+        }
+      },
+      "actions": [
+        "configure-virtual-card",
+        "issue-card"
+      ],
+      "summary": "Virtual debit card configuration form for specifying nickname, limit type, amount, and source account."
+    }
+  }
+}

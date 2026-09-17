@@ -1,0 +1,52 @@
+{
+  "site": "aa.com",
+  "description": "American Airlines flight booking, reservation management, and AAdvantage loyalty status",
+  "base_url": "https://www.aa.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "login": {
+      "path": "/loyalty/login?from=technicalSupport&locale=en_US",
+      "url_patterns": [
+        "https://www.aa.com/loyalty/login*"
+      ],
+      "semantic_anchors": {
+        "login_form": "#loginIdForm",
+        "submit": "button[name='submit']"
+      },
+      "key_elements": {
+        "username_input": {
+          "selector": "#loginId",
+          "name": "AAdvantage # or username"
+        },
+        "password_input": {
+          "selector": "#password",
+          "name": "Password"
+        }
+      },
+      "summary": "Stable AAdvantage loyalty login entry point (avoids login.aa.com expired handoff)."
+    },
+    "flight_search": {
+      "path": "/booking/find-flights",
+      "url_patterns": [
+        "https://www.aa.com/booking/find-flights*",
+        "https://www.aa.com/"
+      ],
+      "semantic_anchors": {
+        "origin": "#reservationFlightSearchForm\\.originAirport",
+        "destination": "#reservationFlightSearchForm\\.destinationAirport"
+      },
+      "key_elements": {
+        "origin_input": {
+          "selector": "#reservationFlightSearchForm\\.originAirport",
+          "name": "From"
+        },
+        "dest_input": {
+          "selector": "#reservationFlightSearchForm\\.destinationAirport",
+          "name": "To"
+        }
+      },
+      "summary": "Flight search form for one-way, round-trip, and award flight queries."
+    }
+  }
+}

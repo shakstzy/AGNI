@@ -1,0 +1,55 @@
+{
+  "site": "united.com",
+  "description": "United Airlines flight booking, reservations, MileagePlus account, and flight status",
+  "base_url": "https://www.united.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "home": {
+      "path": "/en/us",
+      "url_patterns": [
+        "https://www.united.com/en/us*"
+      ],
+      "semantic_anchors": {
+        "book_flight": "#bookFlightTab",
+        "origin": "input[name='bookFlightOriginInput']"
+      },
+      "key_elements": {
+        "origin_field": {
+          "selector": "input[name='bookFlightOriginInput']",
+          "name": "From"
+        },
+        "destination_field": {
+          "selector": "input[name='bookFlightDestinationInput']",
+          "name": "To"
+        },
+        "search_btn": {
+          "role": "button",
+          "name": "Find flights"
+        }
+      },
+      "summary": "United homepage with integrated flight search and MileagePlus sign-in drawer."
+    },
+    "flight_results": {
+      "path": "/en/us/flight-search/book-a-flight/results",
+      "url_patterns": [
+        "https://www.united.com/en/us/flight-search/book-a-flight/results*"
+      ],
+      "semantic_anchors": {
+        "results_container": "[data-testid='flight-results-container']",
+        "sort_filter": "#sortFilterBar"
+      },
+      "key_elements": {
+        "flight_cards": {
+          "selector": "[data-testid='flight-card']",
+          "name": "Flight Results"
+        },
+        "cabin_prices": {
+          "selector": ".fare-cell",
+          "name": "Cabin Fares"
+        }
+      },
+      "summary": "Available flights grid showing departure times, stops, economy/business fares."
+    }
+  }
+}

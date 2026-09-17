@@ -1,0 +1,30 @@
+{
+  "site": "facebook.com",
+  "description": "Facebook social network, public business pages, group community posts, and events",
+  "base_url": "https://www.facebook.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "feed": {
+      "path": "/",
+      "url_patterns": [
+        "https://www.facebook.com/*"
+      ],
+      "semantic_anchors": {
+        "main_feed": "div[role='feed']",
+        "search": "input[aria-label='Search Facebook']"
+      },
+      "key_elements": {
+        "feed_container": {
+          "role": "feed",
+          "name": "News Feed"
+        },
+        "search_input": {
+          "role": "combobox",
+          "name": "Search Facebook"
+        }
+      },
+      "summary": "Facebook main news feed, group updates, and navigation sidebar."
+    }
+  }
+}

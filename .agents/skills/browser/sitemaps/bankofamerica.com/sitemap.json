@@ -1,0 +1,57 @@
+{
+  "site": "bankofamerica.com",
+  "description": "Bank of America consumer banking, savings, checking, and credit card account management",
+  "base_url": "https://www.bankofamerica.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "signon": {
+      "path": "/login/sign-in/signOnV2Screen.go",
+      "url_patterns": [
+        "https://secure.bankofamerica.com/login/sign-in/*",
+        "https://www.bankofamerica.com"
+      ],
+      "semantic_anchors": {
+        "onlineId": "#onlineId1",
+        "passcode": "#passcode1",
+        "signIn": "#signIn"
+      },
+      "key_elements": {
+        "onlineId_field": {
+          "role": "textbox",
+          "name": "User ID"
+        },
+        "passcode_field": {
+          "role": "textbox",
+          "name": "Password"
+        },
+        "submit_button": {
+          "role": "button",
+          "name": "Log In"
+        }
+      },
+      "summary": "Bank of America primary sign-in portal."
+    },
+    "accounts": {
+      "path": "/myaccounts/brain/redirect.go",
+      "url_patterns": [
+        "https://secure.bankofamerica.com/myaccounts/*"
+      ],
+      "semantic_anchors": {
+        "accounts_table": "#myAccountsTable",
+        "total_balance": ".total-deposit-balance"
+      },
+      "key_elements": {
+        "accounts_list": {
+          "role": "table",
+          "name": "Accounts"
+        },
+        "transfer_menu": {
+          "role": "link",
+          "name": "Transfer | Send"
+        }
+      },
+      "summary": "Bank of America accounts summary and balances view."
+    }
+  }
+}

@@ -1,0 +1,110 @@
+{
+  "site": "aistudio.google.com",
+  "description": "Google AI Studio console for Gemini prompt prototyping, fine-tuning, and API keys",
+  "base_url": "https://aistudio.google.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "prompt_builder": {
+      "path": "/prompts/new_chat",
+      "url_patterns": [
+        "https://aistudio.google.com/prompts/*"
+      ],
+      "semantic_anchors": {
+        "prompt_input": "textarea[aria-label*='prompt']",
+        "run_button": "button:has-text('Run')",
+        "model_dropdown": "mat-select[aria-label*='Model']"
+      },
+      "key_elements": {
+        "prompt_box": {
+          "role": "textbox",
+          "name": "Prompt text area"
+        },
+        "model_selector": {
+          "role": "combobox",
+          "name": "Select model"
+        },
+        "system_instructions": {
+          "role": "textbox",
+          "name": "System instructions"
+        },
+        "temperature_slider": {
+          "role": "slider",
+          "name": "Temperature"
+        },
+        "run_btn": {
+          "role": "button",
+          "name": "Run prompt"
+        }
+      },
+      "summary": "Gemini prompt design canvas with model parameter controls, token counts, and system instructions."
+    },
+    "api_keys": {
+      "path": "/apikey",
+      "url_patterns": [
+        "https://aistudio.google.com/apikey*"
+      ],
+      "semantic_anchors": {
+        "key_table": "table",
+        "create_key": "button:has-text('Create API key')"
+      },
+      "key_elements": {
+        "create_key_btn": {
+          "role": "button",
+          "name": "Create API key"
+        },
+        "keys_list": {
+          "role": "table",
+          "name": "Gemini API Keys"
+        },
+        "gcp_project_picker": {
+          "role": "combobox",
+          "name": "Google Cloud Project"
+        }
+      },
+      "summary": "Google AI Studio Gemini API keys list and GCP project bindings."
+    },
+    "library": {
+      "path": "/library",
+      "url_patterns": [
+        "https://aistudio.google.com/library*"
+      ],
+      "semantic_anchors": {
+        "prompt_cards": ".prompt-card",
+        "search_library": "input[placeholder*='Search library']"
+      },
+      "key_elements": {
+        "saved_prompts": {
+          "selector": ".prompt-item",
+          "name": "Saved Prompts List"
+        },
+        "search_box": {
+          "role": "searchbox",
+          "name": "Search library"
+        }
+      },
+      "summary": "User prompt library containing saved chats, structured prompts, and few-shot examples."
+    },
+    "tune": {
+      "path": "/tune",
+      "url_patterns": [
+        "https://aistudio.google.com/tune*"
+      ],
+      "semantic_anchors": {
+        "create_tuned_model": "button:has-text('Create tuned model')",
+        "tuning_jobs_table": "table"
+      },
+      "key_elements": {
+        "create_job_btn": {
+          "role": "button",
+          "name": "Create tuned model"
+        },
+        "jobs_table": {
+          "role": "table",
+          "name": "Model Tuning Jobs"
+        }
+      },
+      "summary": "Model fine-tuning jobs, dataset imports, and tuned model checkpoints."
+    }
+  }
+}

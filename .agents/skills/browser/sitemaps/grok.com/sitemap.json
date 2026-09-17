@@ -1,0 +1,39 @@
+{
+  "site": "grok.com",
+  "description": "xAI Grok conversational interface, Think/DeepSearch mode, and real-time X knowledge search",
+  "base_url": "https://grok.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "chat": {
+      "path": "/",
+      "url_patterns": [
+        "https://grok.com/*"
+      ],
+      "semantic_anchors": {
+        "prompt_input": "textarea[placeholder*='Ask anything']",
+        "send_btn": "button[type='submit']",
+        "think_toggle": "button:has-text('Think')"
+      },
+      "key_elements": {
+        "input_box": {
+          "role": "textbox",
+          "name": "Ask anything"
+        },
+        "mode_toggle": {
+          "role": "button",
+          "name": "Mode toggle"
+        },
+        "deepsearch_btn": {
+          "role": "button",
+          "name": "DeepSearch"
+        },
+        "history_sidebar": {
+          "role": "navigation",
+          "name": "Past Conversations"
+        }
+      },
+      "summary": "Grok interactive query interface with real-time X search and Think/DeepSearch mode."
+    }
+  }
+}

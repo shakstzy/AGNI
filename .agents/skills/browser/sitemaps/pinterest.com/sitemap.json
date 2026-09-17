@@ -1,0 +1,30 @@
+{
+  "site": "pinterest.com",
+  "description": "Pinterest visual search, pins discovery, board organization, and creator trend exploration",
+  "base_url": "https://www.pinterest.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "home": {
+      "path": "/",
+      "url_patterns": [
+        "https://www.pinterest.com/*"
+      ],
+      "semantic_anchors": {
+        "grid": "[data-test-id='grid']",
+        "search_box": "input[data-test-id='search-box-input']"
+      },
+      "key_elements": {
+        "search_input": {
+          "role": "searchbox",
+          "name": "Search"
+        },
+        "pin_cards": {
+          "selector": "[data-test-id='pin']",
+          "name": "Visual Pin Cards"
+        }
+      },
+      "summary": "Personalized visual feed of ideas, aesthetic imagery, and creator products."
+    }
+  }
+}

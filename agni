@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """AGNI — routed multi-system agent harness.
 
-One LLM tool loop, six routed subsystems (HADES-style dispatch hierarchy:
-deterministic CLIs > headless browser > device UI):
+One LLM tool loop over routed subsystems (HADES-style dispatch hierarchy:
+deterministic CLIs > headless browser > device UI). Core routes:
 
     bitwarden  -> `bw`                 vault status/unlock + credential retrieval
     github     -> `gh`                 repos, PRs, issues, gh api
@@ -42,6 +42,9 @@ import subprocess
 import sys
 import urllib.error
 import urllib.request
+
+_HERE = os.path.dirname(os.path.abspath(__file__))
+_SCHEDULE_CLI = os.path.join(_HERE, "workspaces", "scheduler", "schedule")
 
 MODEL = os.environ.get("AGNI_MODEL", "gpt-4o")
 BASE_URL = os.environ.get("AGNI_BASE_URL", "https://api.openai.com/v1").rstrip("/")
@@ -105,6 +108,111 @@ SYSTEMS: dict[str, dict] = {
         "guards": [
             (r"^erase\b", "erasing a simulator requires human approval"),
         ],
+    },
+    "emulator": {
+        "bin": ["emulator"],
+        "desc": "Android emulator: boot AVDs (auth2fa exists). Always pass -feature -HVF -accel off on this VM (no Hypervisor.framework).",
+        "guards": [
+            (r"-wipe-data", "wiping AVD data requires human approval"),
+        ],
+    },
+    "twofa": {
+        "bin": ["oathtool"],
+        "desc": "Local TOTP generation: oathtool -b --totp <base32-seed>. Prefer `bw get totp` first; seeds never go in files.",
+        "guards": [],
+    },
+    "scheduler": {
+        "bin": [_SCHEDULE_CLI],
+        "desc": "Recurring jobs: list/add/remove/run/install (cron-backed; only rewrites # agni: lines).",
+        "guards": [
+            (r"^uninstall\b", "removing all scheduled jobs requires human approval"),
+        ],
+    },
+    "stripe": {
+        "bin": ["stripe"],
+        "desc": "Stripe payments: customers, charges, subscriptions, listen/logs/trigger.",
+        "guards": [
+            (r"^(charges create|refunds create|payouts)", "money movement requires human approval"),
+            (r"delete\b", "deleting Stripe objects requires human approval"),
+        ],
+    },
+    "supabase": {
+        "bin": ["supabase"],
+        "desc": "Supabase: projects, db, functions, gen types, link/deploy.",
+        "guards": [
+            (r"^(db reset|projects delete|functions delete)\b", "destructive Supabase ops require human approval"),
+        ],
+    },
+    "firebase": {
+        "bin": ["firebase"],
+        "desc": "Firebase: projects, hosting, functions, firestore, auth, deploy.",
+        "guards": [
+            (r"^(functions:delete|firestore:delete|hosting:disable|projects:|apps:delete)\b", "destructive Firebase ops require human approval"),
+        ],
+    },
+    "gcloud": {
+        "bin": ["gcloud"],
+        "desc": "Google Cloud SDK: compute, run, iam, secrets, services.",
+        "guards": [
+            (r"(delete|destroy|disable)\b", "destructive gcloud ops require human approval"),
+        ],
+    },
+    "docker": {
+        "bin": ["docker"],
+        "desc": "Docker: build, run, compose, images, logs.",
+        "guards": [
+            (r"(system prune|volume rm|rm -f|rmi -f)", "destructive docker ops require human approval"),
+        ],
+    },
+    "wrangler": {
+        "bin": ["wrangler"],
+        "desc": "Cloudflare Workers/Pages: dev, deploy, kv, r2, d1, tail.",
+        "guards": [
+            (r"delete\b", "deleting Cloudflare resources requires human approval"),
+        ],
+    },
+    "vercel": {
+        "bin": ["vercel"],
+        "desc": "Vercel: deploy, env, domains, logs, ls.",
+        "guards": [
+            (r"(rm|remove|delete)\b", "deleting Vercel resources requires human approval"),
+        ],
+    },
+    "cloudflared": {
+        "bin": ["cloudflared"],
+        "desc": "Cloudflare tunnels: tunnel run/route, quick tunnels.",
+        "guards": [
+            (r"delete\b", "deleting tunnels requires human approval"),
+        ],
+    },
+    "rclone": {
+        "bin": ["rclone"],
+        "desc": "Cloud storage sync: ls, copy, move, sync, mount/nfsmount, config.",
+        "guards": [
+            (r"^(delete|purge|sync.*--delete)\b", "deleting remote files requires human approval"),
+        ],
+    },
+    "ffmpeg": {
+        "bin": ["ffmpeg"],
+        "desc": "Media transcode/probe: convert, trim, extract, thumbnails.",
+        "guards": [],
+    },
+    "ytdlp": {
+        "bin": ["yt-dlp"],
+        "desc": "Media download: video/audio fetch, playlists, subs, formats.",
+        "guards": [],
+    },
+    "exiftool": {
+        "bin": ["exiftool"],
+        "desc": "File metadata read/write: EXIF, dates, GPS, tags.",
+        "guards": [
+            (r"-all=", "stripping all metadata requires human approval"),
+        ],
+    },
+    "apify": {
+        "bin": ["apify"],
+        "desc": "Apify actors/runs/datasets for scraping pipelines.",
+        "guards": [],
     },
 }
 
@@ -300,7 +408,12 @@ Routing:
   into sites; auth(login) does both. Never ask the user for passwords directly.
 - browser -> `browser-use` CLI for anything needing a real browser.
 - android -> `adb` (selector taps via uiautomator, text, swipe, screencap).
+- emulator -> `emulator` for AVD boot (auth2fa); always pass -accel off here.
 - ios -> `xcrun simctl` (simulator list/boot/launch/screenshot).
+- twofa -> `oathtool` TOTP; prefer `bw get totp` when the seed is in the vault.
+- scheduler -> `schedule` CLI for cron jobs.
+- stripe/supabase/firebase/gcloud/docker/wrangler/vercel/cloudflared/rclone/
+  ffmpeg/ytdlp/exiftool/apify -> their native CLIs.
 
 Rules:
 - Never invent URLs, IDs, or branch names — fetch them.

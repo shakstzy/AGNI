@@ -1,0 +1,8 @@
+{
+  "username": "default",
+  "site": "*",
+  "cdp_port": 9222,
+  "cdp": "http://127.0.0.1:9222",
+  "user_data_dir": "user_data",
+  "session_id": "agni-default"
+}

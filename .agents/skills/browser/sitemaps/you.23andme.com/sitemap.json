@@ -1,0 +1,100 @@
+{
+  "site": "you.23andme.com",
+  "description": "23andMe genetics portal for raw genomic SNP data (.txt.zip) and health predisposition reports",
+  "base_url": "https://you.23andme.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "login": {
+      "path": "/login/",
+      "url_patterns": [
+        "https://you.23andme.com/login/*"
+      ],
+      "semantic_anchors": {
+        "login_form": "form[action*='login']",
+        "submit_button": "button[type='submit']"
+      },
+      "key_elements": {
+        "email_input": {
+          "selector": "input[type='email']",
+          "name": "Email address"
+        },
+        "password_input": {
+          "selector": "input[type='password']",
+          "name": "Password"
+        }
+      },
+      "summary": "23andMe authentication portal with 2FA / email authentication prompt."
+    },
+    "home": {
+      "path": "/",
+      "url_patterns": [
+        "https://you.23andme.com/"
+      ],
+      "semantic_anchors": {
+        "top_nav": "nav",
+        "profile_menu": "[data-testid='profile-menu']"
+      },
+      "key_elements": {
+        "reports_tab": {
+          "role": "link",
+          "name": "Health & Ancestry"
+        },
+        "raw_data_link": {
+          "role": "link",
+          "name": "Browse Raw Data"
+        }
+      },
+      "summary": "23andMe user dashboard displaying health reports, DNA relatives, and profile selector."
+    },
+    "browse_raw_data": {
+      "path": "/tools/data/",
+      "url_patterns": [
+        "https://you.23andme.com/tools/data/*"
+      ],
+      "semantic_anchors": {
+        "download_section": "[data-testid='download-raw-data']",
+        "search_input": "input[name='search']"
+      },
+      "key_elements": {
+        "download_tab": {
+          "role": "link",
+          "name": "Download"
+        },
+        "submit_request_button": {
+          "role": "button",
+          "name": "Submit request"
+        },
+        "download_data_button": {
+          "role": "button",
+          "name": "Download Raw Data"
+        }
+      },
+      "summary": "Raw DNA data portal to inspect individual SNPs or initiate/download complete zip file (.txt.zip)."
+    },
+    "health_reports": {
+      "path": "/reports/health_predispositions/",
+      "url_patterns": [
+        "https://you.23andme.com/reports/*"
+      ],
+      "semantic_anchors": {
+        "report_list": "[data-testid='report-list']"
+      },
+      "key_elements": {
+        "predisposition_category": {
+          "role": "tab",
+          "name": "Health Predispositions"
+        },
+        "carrier_status_category": {
+          "role": "tab",
+          "name": "Carrier Status"
+        },
+        "wellness_category": {
+          "role": "tab",
+          "name": "Wellness"
+        }
+      },
+      "summary": "Genetic health reports cataloging genetic risk factors (APOE, BRCA1/2, Parkinson's, Celiac, etc.)."
+    }
+  }
+}

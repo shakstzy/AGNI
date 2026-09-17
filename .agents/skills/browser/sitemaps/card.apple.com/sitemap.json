@@ -1,0 +1,47 @@
+{
+  "site": "card.apple.com",
+  "description": "Apple Card web portal for monthly statements, Daily Cash tracking, and payment history",
+  "base_url": "https://card.apple.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "landing": {
+      "path": "/",
+      "url_patterns": [
+        "https://card.apple.com/*"
+      ],
+      "semantic_anchors": {
+        "card_summary": ".apple-card-summary",
+        "statements_link": "[data-testid='statements-tab']"
+      },
+      "key_elements": {
+        "total_balance": {
+          "role": "text",
+          "name": "Total Balance"
+        },
+        "make_payment": {
+          "role": "button",
+          "name": "Make a Payment"
+        }
+      },
+      "summary": "Apple Card balance overview and monthly statement management."
+    },
+    "statements": {
+      "path": "/statements",
+      "url_patterns": [
+        "https://card.apple.com/statements*"
+      ],
+      "semantic_anchors": {
+        "statements_list": ".statements-list",
+        "download_pdf": ".statement-download-btn"
+      },
+      "key_elements": {
+        "monthly_statement_item": {
+          "role": "listitem",
+          "name": "Monthly Statement"
+        }
+      },
+      "summary": "Apple Card monthly statement archives and PDF exports."
+    }
+  }
+}

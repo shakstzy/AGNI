@@ -1,0 +1,51 @@
+{
+  "site": "huggingface.co",
+  "description": "Hugging Face AI community hub for models, datasets, Spaces applications, and inference endpoints",
+  "base_url": "https://huggingface.co",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "models": {
+      "path": "/models",
+      "url_patterns": [
+        "https://huggingface.co/models*"
+      ],
+      "semantic_anchors": {
+        "search_input": "input[placeholder*='Filter by name']",
+        "model_list": ".models-list"
+      },
+      "key_elements": {
+        "search_box": {
+          "role": "searchbox",
+          "name": "Filter by name"
+        },
+        "model_cards": {
+          "selector": "article.overview-card-wrapper",
+          "name": "Model Cards"
+        }
+      },
+      "summary": "Open-weight machine learning model repository with tags, downloads, and weights."
+    },
+    "settings": {
+      "path": "/settings/tokens",
+      "url_patterns": [
+        "https://huggingface.co/settings/tokens*"
+      ],
+      "semantic_anchors": {
+        "tokens_heading": "Access Tokens",
+        "create_token": "New token"
+      },
+      "key_elements": {
+        "new_token_btn": {
+          "role": "button",
+          "name": "New token"
+        },
+        "tokens_table": {
+          "selector": ".token-list",
+          "name": "Tokens list"
+        }
+      },
+      "summary": "Hugging Face user access tokens for Git and API calls."
+    }
+  }
+}

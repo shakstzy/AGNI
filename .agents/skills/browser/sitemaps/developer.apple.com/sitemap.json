@@ -1,0 +1,51 @@
+{
+  "site": "developer.apple.com",
+  "description": "Apple Developer portal for certificates, identifiers, provisioning profiles, and documentation",
+  "base_url": "https://developer.apple.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "account": {
+      "path": "/account/",
+      "url_patterns": [
+        "https://developer.apple.com/account*"
+      ],
+      "semantic_anchors": {
+        "program_status": ".program-status",
+        "sidebar": "#nav-sidebar"
+      },
+      "key_elements": {
+        "certificates_link": {
+          "role": "link",
+          "name": "Certificates, Identifiers & Profiles"
+        },
+        "membership_details": {
+          "selector": ".membership-detail",
+          "name": "Membership status"
+        }
+      },
+      "summary": "Apple Developer member account overview and resource links."
+    },
+    "certificates": {
+      "path": "/account/resources/certificates/list",
+      "url_patterns": [
+        "https://developer.apple.com/account/resources/*"
+      ],
+      "semantic_anchors": {
+        "resource_table": "table.resource-table",
+        "add_btn": "button.create-resource"
+      },
+      "key_elements": {
+        "cert_table": {
+          "role": "table",
+          "name": "Certificates & Profiles"
+        },
+        "download_cert": {
+          "role": "button",
+          "name": "Download"
+        }
+      },
+      "summary": "Signing certificates, bundle IDs, device UUIDs, and provisioning profile management."
+    }
+  }
+}

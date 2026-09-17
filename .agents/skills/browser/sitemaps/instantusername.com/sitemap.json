@@ -1,0 +1,30 @@
+{
+  "site": "instantusername.com",
+  "description": "Instant Username search engine checking handle availability across 100+ social platforms",
+  "base_url": "https://instantusername.com",
+  "login_required": false,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "search": {
+      "path": "/",
+      "url_patterns": [
+        "https://instantusername.com/*"
+      ],
+      "semantic_anchors": {
+        "username_input": "#search-input",
+        "results_grid": "#results"
+      },
+      "key_elements": {
+        "search_box": {
+          "selector": "#search-input",
+          "role": "searchbox"
+        },
+        "platform_tiles": {
+          "selector": ".platform-item",
+          "name": "Platform Status Tiles"
+        }
+      },
+      "summary": "Real-time username availability checker across major social networks."
+    }
+  }
+}

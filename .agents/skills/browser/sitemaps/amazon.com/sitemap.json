@@ -1,0 +1,53 @@
+{
+  "site": "amazon.com",
+  "description": "Amazon marketplace search, product details, and competitor pricing research",
+  "base_url": "https://www.amazon.com",
+  "login_required": false,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "search": {
+      "path": "/s?k=<query>",
+      "url_patterns": [
+        "https://www.amazon.com/s?k=*"
+      ],
+      "semantic_anchors": {
+        "search_input": "#twotabsearchtextbox",
+        "results": "[data-component-type='s-search-result']"
+      },
+      "key_elements": {
+        "search_box": {
+          "role": "searchbox",
+          "name": "Search Amazon"
+        },
+        "result_card": {
+          "selector": ".s-result-item[data-asin]",
+          "name": "Search Result Item"
+        }
+      },
+      "summary": "Product listing search results grid with pricing, ASINs, ratings, and delivery estimates."
+    },
+    "product": {
+      "path": "/dp/<ASIN>",
+      "url_patterns": [
+        "https://www.amazon.com/dp/*",
+        "https://www.amazon.com/*/dp/*"
+      ],
+      "semantic_anchors": {
+        "title": "#productTitle",
+        "price": ".a-price .a-offscreen",
+        "rating": "#acrPopover"
+      },
+      "key_elements": {
+        "product_title": {
+          "selector": "#productTitle",
+          "role": "heading"
+        },
+        "buybox": {
+          "selector": "#desktop_buybox",
+          "role": "region"
+        }
+      },
+      "summary": "Detailed product page displaying specifications, seller, availability, and customer reviews."
+    }
+  }
+}

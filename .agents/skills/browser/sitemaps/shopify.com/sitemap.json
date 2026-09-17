@@ -1,0 +1,51 @@
+{
+  "site": "shopify.com",
+  "description": "Shopify merchant admin panel for store settings, products, apps, and order fulfillment",
+  "base_url": "https://admin.shopify.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "dashboard": {
+      "path": "/",
+      "url_patterns": [
+        "https://admin.shopify.com/*"
+      ],
+      "semantic_anchors": {
+        "nav": "nav[aria-label='Main']",
+        "search": "button[aria-label='Search']"
+      },
+      "key_elements": {
+        "main_nav": {
+          "role": "navigation",
+          "name": "Main navigation"
+        },
+        "store_selector": {
+          "role": "button",
+          "name": "Store selector"
+        }
+      },
+      "summary": "Shopify admin home overview showing metrics, orders to fulfill, and sales channels."
+    },
+    "products": {
+      "path": "/products",
+      "url_patterns": [
+        "https://admin.shopify.com/store/*/products*"
+      ],
+      "semantic_anchors": {
+        "add_product": "Add product",
+        "product_table": "[data-polaris-table]"
+      },
+      "key_elements": {
+        "product_list": {
+          "role": "table",
+          "name": "Products"
+        },
+        "export_btn": {
+          "role": "button",
+          "name": "Export"
+        }
+      },
+      "summary": "Product inventory and catalog management table."
+    }
+  }
+}

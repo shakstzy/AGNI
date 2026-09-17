@@ -1,0 +1,53 @@
+{
+  "site": "myturbotax.intuit.com",
+  "description": "Intuit TurboTax tax preparation, federal and state return filing status, and archived tax documents",
+  "base_url": "https://myturbotax.intuit.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "landing": {
+      "path": "/",
+      "url_patterns": [
+        "https://myturbotax.intuit.com/*",
+        "https://accounts.intuit.com/*"
+      ],
+      "semantic_anchors": {
+        "identifier": "#ius-identifier",
+        "submit": "#ius-sign-in-button"
+      },
+      "key_elements": {
+        "user_field": {
+          "role": "textbox",
+          "name": "User ID or Email"
+        },
+        "sign_in_btn": {
+          "role": "button",
+          "name": "Sign In"
+        }
+      },
+      "summary": "Intuit TurboTax single sign-on portal."
+    },
+    "timeline": {
+      "path": "/tax-timeline",
+      "url_patterns": [
+        "https://myturbotax.intuit.com/tax-timeline*",
+        "https://myturbotax.intuit.com/experience*"
+      ],
+      "semantic_anchors": {
+        "tax_timeline": ".tax-timeline-container",
+        "prior_returns": "[data-testid='prior-returns-section']"
+      },
+      "key_elements": {
+        "filing_status": {
+          "role": "status",
+          "name": "Filing Status"
+        },
+        "download_pdf": {
+          "role": "link",
+          "name": "Download/print return (PDF)"
+        }
+      },
+      "summary": "TurboTax annual filing history, accepted return statuses, and document downloads."
+    }
+  }
+}

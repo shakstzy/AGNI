@@ -1,0 +1,30 @@
+{
+  "site": "hunter.io",
+  "description": "Hunter.io professional email lookup, domain search, email verification, and API key management",
+  "base_url": "https://hunter.io",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "api_keys": {
+      "path": "/api-keys",
+      "url_patterns": [
+        "https://hunter.io/api-keys*"
+      ],
+      "semantic_anchors": {
+        "api_key_field": "#api-key",
+        "heading": "API key"
+      },
+      "key_elements": {
+        "key_container": {
+          "selector": ".api-key-container",
+          "name": "API Key Box"
+        },
+        "copy_btn": {
+          "role": "button",
+          "name": "Copy API key"
+        }
+      },
+      "summary": "Hunter account API credentials and rate limit usage counters."
+    }
+  }
+}

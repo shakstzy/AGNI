@@ -1,0 +1,51 @@
+{
+  "site": "play.google.com",
+  "description": "Google Play developer console for Android app bundle releases, internal test tracks, and store listings",
+  "base_url": "https://play.google.com/console",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "developers": {
+      "path": "/console/developers",
+      "url_patterns": [
+        "https://play.google.com/console/developers*"
+      ],
+      "semantic_anchors": {
+        "app_list": "[data-testid='app-list']",
+        "create_app": "button:has-text('Create app')"
+      },
+      "key_elements": {
+        "app_table": {
+          "role": "table",
+          "name": "Developer Apps"
+        },
+        "create_app_btn": {
+          "role": "button",
+          "name": "Create app"
+        }
+      },
+      "summary": "Google Play developer account overview listing all registered Android applications."
+    },
+    "internal_testing": {
+      "path": "/console/developers/*/app/*/tracks/internal-testing",
+      "url_patterns": [
+        "https://play.google.com/console/developers/*/app/*/tracks/internal-testing*"
+      ],
+      "semantic_anchors": {
+        "create_release": "Create new release",
+        "releases_table": ".releases-list"
+      },
+      "key_elements": {
+        "create_release_btn": {
+          "role": "button",
+          "name": "Create new release"
+        },
+        "release_rows": {
+          "selector": ".release-row",
+          "name": "Internal Test Releases"
+        }
+      },
+      "summary": "Internal test track for uploading AAB artifacts and managing test email distribution lists."
+    }
+  }
+}

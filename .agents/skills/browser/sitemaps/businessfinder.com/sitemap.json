@@ -1,0 +1,43 @@
+{
+  "site": "businessfinder.com",
+  "name": "BusinessFinder",
+  "base_url": "https://www.businessfinder.com",
+  "routes": {
+    "search": {
+      "path": "/search",
+      "url": "https://www.businessfinder.com/search",
+      "params": {
+        "q": "keyword search string",
+        "category": "industry slug (e.g. laundromat, car-wash, hvac)",
+        "location": "geographic region (e.g. texas, austin, dallas)",
+        "min_price": "minimum asking price integer",
+        "max_price": "maximum asking price integer",
+        "min_sde": "minimum cash flow integer"
+      },
+      "selectors": {
+        "search_input": "input[name='q'], input[placeholder*='Search']",
+        "location_input": "input[name='location'], input[placeholder*='Location']",
+        "filter_category": "select[name='category'], [data-filter='category']",
+        "submit_button": "button[type='submit'], .btn-search",
+        "listing_cards": ".listing-card, .result-item, [data-listing-id]",
+        "listing_link": "a[href*='/listing/']",
+        "pagination_next": "a.pagination-next, [aria-label='Next page']"
+      }
+    },
+    "listing_detail": {
+      "path": "/listing/:id",
+      "selectors": {
+        "title": "h1.listing-title, .detail-header h1",
+        "asking_price": ".asking-price, [data-field='price']",
+        "cash_flow": ".cash-flow, [data-field='sde'], [data-field='cashflow']",
+        "revenue": ".gross-revenue, [data-field='revenue']",
+        "location": ".listing-location, [data-field='location']",
+        "description": ".listing-description, .overview-text",
+        "broker_name": ".broker-card .name, .contact-name",
+        "broker_email": "a[href^='mailto:'], .broker-email",
+        "broker_phone": "a[href^='tel:'], .broker-phone",
+        "contact_form": "form#inquiry-form, form.contact-seller"
+      }
+    }
+  }
+}

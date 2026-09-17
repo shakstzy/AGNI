@@ -1,0 +1,51 @@
+{
+  "site": "icloud.com",
+  "description": "Apple iCloud web suite for iCloud Mail, Notes, Reminders, Calendar, and Find My",
+  "base_url": "https://www.icloud.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "mail": {
+      "path": "/mail/",
+      "url_patterns": [
+        "https://www.icloud.com/mail/*"
+      ],
+      "semantic_anchors": {
+        "mailbox": ".mail-list",
+        "compose": "button[title='Compose']"
+      },
+      "key_elements": {
+        "inbox_list": {
+          "role": "list",
+          "name": "Email Message List"
+        },
+        "reading_pane": {
+          "selector": ".reading-pane",
+          "name": "Email Content Viewer"
+        }
+      },
+      "summary": "iCloud Mail web client showing folders, inbox messages, and email reader."
+    },
+    "launchpad": {
+      "path": "/",
+      "url_patterns": [
+        "https://www.icloud.com/"
+      ],
+      "semantic_anchors": {
+        "app_grid": ".apps-grid",
+        "profile_badge": ".account-badge"
+      },
+      "key_elements": {
+        "mail_app": {
+          "role": "link",
+          "name": "Mail"
+        },
+        "notes_app": {
+          "role": "link",
+          "name": "Notes"
+        }
+      },
+      "summary": "iCloud home launcher with apps and storage gauges."
+    }
+  }
+}

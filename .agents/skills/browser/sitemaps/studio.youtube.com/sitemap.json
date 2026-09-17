@@ -1,0 +1,51 @@
+{
+  "site": "studio.youtube.com",
+  "description": "YouTube Studio creator dashboard for Shorts uploading, video metadata, and channel analytics",
+  "base_url": "https://studio.youtube.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "dashboard": {
+      "path": "/",
+      "url_patterns": [
+        "https://studio.youtube.com/*"
+      ],
+      "semantic_anchors": {
+        "channel_name": "#channel-title",
+        "create_btn": "#create-icon"
+      },
+      "key_elements": {
+        "upload_button": {
+          "role": "button",
+          "name": "Create"
+        },
+        "content_nav": {
+          "role": "link",
+          "name": "Content"
+        }
+      },
+      "summary": "Creator dashboard with recent upload performance and subscriber summary."
+    },
+    "content": {
+      "path": "/channel/*/videos",
+      "url_patterns": [
+        "https://studio.youtube.com/channel/*/videos*"
+      ],
+      "semantic_anchors": {
+        "video_table": "ytcp-video-row",
+        "filter_bar": "#filter-bar"
+      },
+      "key_elements": {
+        "video_rows": {
+          "selector": "ytcp-video-row",
+          "name": "Video Rows"
+        },
+        "visibility_badge": {
+          "selector": ".cell-body-visibility",
+          "name": "Visibility Status"
+        }
+      },
+      "summary": "Channel videos and Shorts inventory showing monetization, copyright checks, and views."
+    }
+  }
+}

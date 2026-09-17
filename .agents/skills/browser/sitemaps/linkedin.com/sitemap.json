@@ -1,0 +1,26 @@
+{
+  "site": "linkedin.com",
+  "description": "LinkedIn network, feed, and job search interactions",
+  "base_url": "https://www.linkedin.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "feed": {
+      "path": "/feed/",
+      "url_patterns": ["https://www.linkedin.com/feed*"],
+      "semantic_anchors": {
+        "search_bar": "Search"
+      },
+      "key_elements": {
+        "global_nav": {
+          "role": "navigation",
+          "name": "Primary Navigation"
+        },
+        "search_input": {
+          "role": "searchbox",
+          "name": "Search"
+        }
+      }
+    }
+  }
+}

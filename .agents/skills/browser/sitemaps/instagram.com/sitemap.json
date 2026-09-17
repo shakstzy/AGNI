@@ -1,0 +1,51 @@
+{
+  "site": "instagram.com",
+  "description": "Instagram visual network for creator profiles, reels, direct message inquiries, and media posts",
+  "base_url": "https://www.instagram.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "feed": {
+      "path": "/",
+      "url_patterns": [
+        "https://www.instagram.com/"
+      ],
+      "semantic_anchors": {
+        "main_nav": "nav[role='navigation']",
+        "posts": "article"
+      },
+      "key_elements": {
+        "nav_bar": {
+          "role": "navigation",
+          "name": "Instagram Navigation"
+        },
+        "new_post_btn": {
+          "role": "link",
+          "name": "New post"
+        }
+      },
+      "summary": "Instagram main feed, stories bar, and navigation dock."
+    },
+    "profile": {
+      "path": "/<username>/",
+      "url_patterns": [
+        "https://www.instagram.com/*"
+      ],
+      "semantic_anchors": {
+        "username_header": "header h2",
+        "posts_grid": "article a"
+      },
+      "key_elements": {
+        "bio": {
+          "selector": "header section",
+          "name": "Profile Bio"
+        },
+        "media_tiles": {
+          "selector": "article a",
+          "name": "Media Tiles"
+        }
+      },
+      "summary": "User profile with follower count, following count, bio, and posts."
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "site": "firecrawl.dev",
+  "description": "Firecrawl web scraping and markdown extraction API console, crawler jobs, and credit metrics",
+  "base_url": "https://firecrawl.dev",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "dashboard": {
+      "path": "/app",
+      "url_patterns": [
+        "https://www.firecrawl.dev/app*"
+      ],
+      "semantic_anchors": {
+        "api_key_card": "[data-testid='api-key']",
+        "playground": "Playground"
+      },
+      "key_elements": {
+        "playground_tab": {
+          "role": "link",
+          "name": "Playground"
+        },
+        "usage_meter": {
+          "selector": ".credits-meter",
+          "name": "Credits Meter"
+        }
+      },
+      "summary": "Firecrawl developer dashboard showing scrape jobs and credit usage."
+    }
+  }
+}

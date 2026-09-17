@@ -1,0 +1,54 @@
+{
+  "site": "secure.cmghomeloans.com",
+  "description": "CMG Home Loans borrower servicing portal for mortgage balance, escrow, payment schedules, and 1098 tax forms",
+  "base_url": "https://secure.cmghomeloans.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "login": {
+      "path": "/",
+      "selectors": {
+        "user_field": "input[name='username'], input[type='email'], #username",
+        "password_field": "input[name='password'], #password",
+        "login_btn": "button[type='submit'], input[type='submit'], button:has-text('Sign In'), button:has-text('Log In')"
+      }
+    },
+    "dashboard": {
+      "path": "/dashboard",
+      "url_patterns": [
+        "https://secure.cmghomeloans.com/*dashboard*",
+        "https://secure.cmghomeloans.com/*loan*"
+      ],
+      "semantic_anchors": {
+        "unpaid_principal_balance": ".principal-balance, [data-testid='unpaid-principal-balance'], .loan-balance",
+        "interest_rate": ".interest-rate, [data-testid='interest-rate']",
+        "escrow_balance": ".escrow-balance, [data-testid='escrow-balance']",
+        "monthly_payment": ".monthly-payment, [data-testid='monthly-payment-amount']",
+        "payment_due_date": ".due-date, [data-testid='next-payment-due']"
+      },
+      "key_elements": {
+        "loan_summary": {
+          "role": "region",
+          "name": "Loan Overview"
+        },
+        "payment_breakdown": {
+          "role": "region",
+          "name": "Payment Breakdown"
+        }
+      },
+      "summary": "Mortgage dashboard displaying current unpaid principal, interest rate, escrow balance, next payment amount, and maturity date."
+    },
+    "statements": {
+      "path": "/statements",
+      "url_patterns": [
+        "https://secure.cmghomeloans.com/*statement*",
+        "https://secure.cmghomeloans.com/*documents*"
+      ],
+      "semantic_anchors": {
+        "statement_list": ".statement-table, .documents-list",
+        "tax_form_1098": "a:has-text('1098'), [data-testid='tax-doc-1098']"
+      },
+      "summary": "Monthly mortgage statements and year-end IRS Form 1098 mortgage interest statements."
+    }
+  }
+}

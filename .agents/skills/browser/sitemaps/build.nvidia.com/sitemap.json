@@ -1,0 +1,30 @@
+{
+  "site": "build.nvidia.com",
+  "description": "NVIDIA Inference Microservices (NIM) cloud catalog, foundation model APIs, and deployment containers",
+  "base_url": "https://build.nvidia.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "explore": {
+      "path": "/explore/discover",
+      "url_patterns": [
+        "https://build.nvidia.com/explore/*"
+      ],
+      "semantic_anchors": {
+        "model_grid": ".model-grid",
+        "search_bar": "input[placeholder*='Search']"
+      },
+      "key_elements": {
+        "model_cards": {
+          "selector": ".model-card",
+          "name": "NIM Model Cards"
+        },
+        "api_key_btn": {
+          "role": "button",
+          "name": "Get API Key"
+        }
+      },
+      "summary": "NVIDIA NIM catalog of models with live interactive playground."
+    }
+  }
+}

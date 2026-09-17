@@ -1,0 +1,55 @@
+{
+  "site": "trends.google.com",
+  "description": "Google Trends search interest analysis, regional breakdown, related queries, and daily trending searches",
+  "base_url": "https://trends.google.com",
+  "login_required": false,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "trending_now": {
+      "path": "/trends/trendingnow?geo=US",
+      "url_patterns": [
+        "https://trends.google.com/trends/trendingnow*"
+      ],
+      "semantic_anchors": {
+        "trending_feed": "feed-item",
+        "geo_selector": "button[aria-label*='Location']"
+      },
+      "key_elements": {
+        "trending_items": {
+          "selector": "feed-item",
+          "name": "Trending Search Items"
+        },
+        "search_volume": {
+          "selector": ".search-count-title",
+          "name": "Search Volume"
+        }
+      },
+      "summary": "Daily and real-time trending search queries with approximate search volume."
+    },
+    "explore": {
+      "path": "/trends/explore",
+      "url_patterns": [
+        "https://trends.google.com/trends/explore*"
+      ],
+      "semantic_anchors": {
+        "search_input": "input[placeholder*='Add a search term']",
+        "timeline_chart": "widget[widget-name='TIMESERIES']"
+      },
+      "key_elements": {
+        "query_input": {
+          "role": "combobox",
+          "name": "Add a search term"
+        },
+        "interest_chart": {
+          "selector": "svg.line-chart",
+          "name": "Interest Over Time Chart"
+        },
+        "related_queries": {
+          "selector": "widget[widget-name='RELATED_QUERIES']",
+          "name": "Related Queries"
+        }
+      },
+      "summary": "Interest over time comparison canvas with geo breakdown and rising related queries."
+    }
+  }
+}

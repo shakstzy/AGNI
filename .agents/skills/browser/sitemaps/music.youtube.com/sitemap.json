@@ -1,0 +1,30 @@
+{
+  "site": "music.youtube.com",
+  "description": "YouTube Music streaming web player for playlist playback, library tracks, and audio streaming",
+  "base_url": "https://music.youtube.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "home": {
+      "path": "/",
+      "url_patterns": [
+        "https://music.youtube.com/*"
+      ],
+      "semantic_anchors": {
+        "player_bar": "ytmusic-player-bar",
+        "search_btn": "ytmusic-search-box"
+      },
+      "key_elements": {
+        "play_pause_btn": {
+          "selector": "#play-pause-button",
+          "name": "Play / Pause"
+        },
+        "track_title": {
+          "selector": ".title.ytmusic-player-bar",
+          "name": "Track Title"
+        }
+      },
+      "summary": "Web audio player with persistent playback controls and queue."
+    }
+  }
+}

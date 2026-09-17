@@ -1,0 +1,69 @@
+{
+  "site": "dashboard.stripe.com",
+  "description": "Stripe payments processing console, gross sales volume, charges, customers, and payout tracking",
+  "base_url": "https://dashboard.stripe.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "login": {
+      "path": "/login",
+      "url_patterns": [
+        "https://dashboard.stripe.com/login*"
+      ],
+      "semantic_anchors": {
+        "email": "#email",
+        "password": "#password",
+        "submit": "button[type='submit']"
+      },
+      "key_elements": {
+        "email_field": {
+          "role": "textbox",
+          "name": "Email"
+        },
+        "password_field": {
+          "role": "textbox",
+          "name": "Password"
+        }
+      },
+      "summary": "Stripe merchant dashboard authentication screen."
+    },
+    "home": {
+      "path": "/",
+      "url_patterns": [
+        "https://dashboard.stripe.com/"
+      ],
+      "semantic_anchors": {
+        "gross_volume": "[data-test='gross-volume-metric']",
+        "payouts_card": "[data-test='payouts-card']"
+      },
+      "key_elements": {
+        "chart_container": {
+          "role": "region",
+          "name": "Analytics Chart"
+        },
+        "livemode_toggle": {
+          "role": "switch",
+          "name": "View test data"
+        }
+      },
+      "summary": "Stripe executive metrics dashboard with gross revenue and payout status."
+    },
+    "payments": {
+      "path": "/payments",
+      "url_patterns": [
+        "https://dashboard.stripe.com/payments*"
+      ],
+      "semantic_anchors": {
+        "payments_table": "[data-test='payments-table']",
+        "export_btn": "[data-test='export-btn']"
+      },
+      "key_elements": {
+        "transaction_row": {
+          "role": "row",
+          "name": "Payment Transaction"
+        }
+      },
+      "summary": "Captured payments, refunds, disputes, and customer transactions."
+    }
+  }
+}

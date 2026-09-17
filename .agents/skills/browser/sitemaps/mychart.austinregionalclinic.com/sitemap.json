@@ -1,0 +1,119 @@
+{
+  "site": "mychart.austinregionalclinic.com",
+  "description": "Austin Regional Clinic MyChart portal for appointments, test results, clinician notes, immunization records, and document center",
+  "base_url": "https://mychart.austinregionalclinic.com",
+  "login_required": true,
+  "driver": "Browser Use CLI 3.0",
+  "pages": {
+    "login": {
+      "path": "/MyChart/Authentication/Login",
+      "url_patterns": [
+        "https://mychart.austinregionalclinic.com/MyChart/Authentication/Login*"
+      ],
+      "semantic_anchors": {
+        "login_box": "#loginForm",
+        "submit": "#submit"
+      },
+      "key_elements": {
+        "username_input": {
+          "selector": "#Login",
+          "name": "MyChart Username"
+        },
+        "password_input": {
+          "selector": "#Password",
+          "name": "Password"
+        }
+      },
+      "summary": "ARC MyChart secure patient portal login form."
+    },
+    "home": {
+      "path": "/MyChart/Home/",
+      "url_patterns": [
+        "https://mychart.austinregionalclinic.com/MyChart/Home/*"
+      ],
+      "semantic_anchors": {
+        "health_feed": "#healthFeed",
+        "top_nav": "#topNav"
+      },
+      "key_elements": {
+        "test_results_link": {
+          "role": "link",
+          "name": "Test Results"
+        },
+        "messages_link": {
+          "role": "link",
+          "name": "Messages"
+        },
+        "visits_link": {
+          "role": "link",
+          "name": "Visits"
+        }
+      },
+      "summary": "Patient dashboard with care team alerts, upcoming visits, and health reminders."
+    },
+    "test_results": {
+      "path": "/MyChart/Health/TestResults",
+      "url_patterns": [
+        "https://mychart.austinregionalclinic.com/MyChart/Health/TestResults*"
+      ],
+      "semantic_anchors": {
+        "results_container": ".card-list, #testResultsList"
+      },
+      "key_elements": {
+        "lab_result_item": {
+          "selector": ".result-item",
+          "name": "Lab Result Item"
+        }
+      },
+      "summary": "Diagnostic test and laboratory results including lipid panel, metabolic panel, HbA1c, and CBC."
+    },
+    "clinician_notes": {
+      "path": "/MyChart/Health/Notes",
+      "url_patterns": [
+        "https://mychart.austinregionalclinic.com/MyChart/Health/Notes*"
+      ],
+      "semantic_anchors": {
+        "notes_container": ".notes-container"
+      },
+      "key_elements": {
+        "note_entry": {
+          "selector": ".note-body",
+          "name": "Provider Clinical Note"
+        }
+      },
+      "summary": "Encounter notes, physician clinical assessments, and post-visit summaries."
+    },
+    "immunizations": {
+      "path": "/MyChart/Health/Immunizations",
+      "url_patterns": [
+        "https://mychart.austinregionalclinic.com/MyChart/Health/Immunizations*"
+      ],
+      "semantic_anchors": {
+        "immunization_table": ".immunization-list, table.immunizations"
+      },
+      "key_elements": {
+        "vaccine_entry": {
+          "selector": ".vaccine-name",
+          "name": "Vaccine Record"
+        }
+      },
+      "summary": "Historical vaccine administration dates, lot numbers, and immunization schedules."
+    },
+    "document_center": {
+      "path": "/MyChart/Health/DocumentCenter",
+      "url_patterns": [
+        "https://mychart.austinregionalclinic.com/MyChart/Health/DocumentCenter*"
+      ],
+      "semantic_anchors": {
+        "export_section": "[data-testid='download-records']"
+      },
+      "key_elements": {
+        "download_my_record": {
+          "role": "link",
+          "name": "Download My Record"
+        }
+      },
+      "summary": "Health data export portal for FHIR R4 bundles and Continuity of Care Documents (CCDA)."
+    }
+  }
+}

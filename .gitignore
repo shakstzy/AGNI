@@ -2,3 +2,9 @@
 __pycache__/
 *.pyc
 .DS_Store
+
+# runtime state — never commit browser sessions, dumps, or job logs
+.agents/skills/browser/profiles/*/user_data/
+workspaces/scheduler/logs/
+*.apk
+*.ipa

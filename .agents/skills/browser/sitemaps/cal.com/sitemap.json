@@ -1,0 +1,18 @@
+{
+  "host": "cal.com",
+  "name": "Cal.com",
+  "description": "Scheduling platform and calendar synchronization",
+  "routes": {
+    "home": "https://cal.com/",
+    "signup": "https://cal.com/signup",
+    "login": "https://cal.com/auth/login",
+    "dashboard": "https://cal.com/event-types",
+    "availability": "https://cal.com/availability"
+  },
+  "selectors": {
+    "google_signup_btn": "button:has-text('Google'), [data-testid='google-login-button'], a[href*='google']",
+    "google_login_btn": "button:has-text('Google'), [data-testid='google-login-button']",
+    "email_input": "input[name='email'], input[type='email']",
+    "submit_btn": "button[type='submit']"
+  }
+}
